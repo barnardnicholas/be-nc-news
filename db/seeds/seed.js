@@ -22,13 +22,13 @@ exports.seed = function(knex) {
       // console.log("topics:", topicResponses);
       // console.log("users:", userResponses);
       const formattedArticles = formatDates(articleData);
-      console.log("formattedArticles:", formattedArticles);
+      // console.log("formattedArticles:", formattedArticles);
       return knex("articles")
         .insert(formattedArticles)
         .returning("*");
     })
     .then(articleRows => {
-      console.log("articleRows:", articleRows);
+      // console.log("articleRows:", articleRows);
       /* 
 
       Your comment data is currently in the incorrect format and will violate your SQL schema. 
@@ -40,6 +40,7 @@ exports.seed = function(knex) {
 
       const articleRef = makeRefObj(articleRows);
       const formattedComments = formatComments(commentData, articleRef);
+      console.log(formattedComments);
       return knex("comments").insert(formattedComments);
     });
 };

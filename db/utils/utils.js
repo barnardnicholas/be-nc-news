@@ -19,7 +19,13 @@ exports.makeRefObj = list => {
 
 exports.formatComments = (comments, articleRef) => {
   return comments.map(comment => {
-    const { belongs_to, ...keys } = comment;
-    return { article_id: articleRef[comment.belongs_to], ...keys };
+    const { belongs_to, created_by, created_at, ...keys } = comment;
+    const thisDate = new Date(created_at);
+    return {
+      article_id: articleRef[comment.belongs_to],
+      author: comment.created_by,
+      created_at: thisDate,
+      ...keys
+    };
   });
 };
