@@ -6,7 +6,8 @@ exports.up = function(knex) {
     table.text("body");
     table.integer("votes").defaultTo("0");
     table.string("author").references("users.username");
-    table.timestamp("created_at");
+    table.string("created_at");
+    table.string("topic");
   });
 };
 

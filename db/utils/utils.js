@@ -9,10 +9,10 @@ exports.formatDates = list => {
   });
 };
 
-exports.makeRefObj = (list, key, value) => {
+exports.makeRefObj = list => {
   let result = {};
   list.forEach(item => {
-    result[item[key]] = item[value];
+    result[item.title] = item.article_id;
   });
   return result;
 };

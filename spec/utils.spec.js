@@ -134,7 +134,7 @@ describe("makeRefObj", () => {
         article_id: 1
       }
     ];
-    const actualResult = makeRefObj(items, "title", "article_id");
+    const actualResult = makeRefObj(items);
     const expectedResult = { "Living in the shadow of a great man": 1 };
     expect(actualResult).to.eql(expectedResult);
   });
@@ -167,7 +167,7 @@ describe("makeRefObj", () => {
         article_id: 3
       }
     ];
-    const actualResult = makeRefObj(items, "title", "article_id");
+    const actualResult = makeRefObj(items);
     const expectedResult = {
       "Living in the shadow of a great man": 1,
       "Sony Vaio; or, The Laptop": 2,
@@ -182,7 +182,7 @@ describe("makeRefObj", () => {
   });
 });
 
-describe.only("formatComments", () => {
+describe("formatComments", () => {
   it("should return an array of objects", () => {
     const comments = [{}];
     const ref = {};
