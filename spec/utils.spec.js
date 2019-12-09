@@ -1,3 +1,6 @@
+process.env.NODE_ENV = "test";
+console.log(process.env.NODE_ENV);
+
 const { expect } = require("chai");
 const { formatDates, makeRefObj, formatComments } = require("../db/utils/utils");
 
@@ -206,15 +209,16 @@ describe("formatComments", () => {
         created_at: 1416746163389
       }
     ];
+    const date1 = new Date(comments[0].created_at);
     const ref = { "Living in the shadow of a great man": 1 };
     const actualResult = formatComments(comments, ref);
     const expectedResult = [
       {
         body: " I carry a log — yes. Is it funny to you? It is not to me.",
         article_id: 1,
-        created_by: "icellusedkars",
+        author: "icellusedkars",
         votes: -100,
-        created_at: 1416746163389
+        created_at: date1
       }
     ];
     expect(actualResult).to.eql(expectedResult);
@@ -224,7 +228,7 @@ describe("formatComments", () => {
       {
         body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
         belongs_to: "They're not exactly dogs, are they?",
-        created_by: "butter_bridge",
+        author: "butter_bridge",
         votes: 16,
         created_at: 1511354163389
       },
@@ -232,7 +236,7 @@ describe("formatComments", () => {
         body:
           "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.",
         belongs_to: "Living in the shadow of a great man",
-        created_by: "butter_bridge",
+        author: "butter_bridge",
         votes: 14,
         created_at: 1479818163389
       },
@@ -240,11 +244,14 @@ describe("formatComments", () => {
         body:
           "Replacing the quiet elegance of the dark suit and tie with the casual indifference of these muted earth tones is a form of fashion suicide, but, uh, call me crazy — onyou it works.",
         belongs_to: "Living in the shadow of a great man",
-        created_by: "icellusedkars",
+        author: "icellusedkars",
         votes: 100,
         created_at: 1448282163389
       }
     ];
+    const date1 = new Date(comments[0].created_at);
+    const date2 = new Date(comments[1].created_at);
+    const date3 = new Date(comments[2].created_at);
     const ref = {
       "Living in the shadow of a great man": 1,
       "They're not exactly dogs, are they?": 2
@@ -254,25 +261,25 @@ describe("formatComments", () => {
       {
         body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
         article_id: 2,
-        created_by: "butter_bridge",
+        author: "butter_bridge",
         votes: 16,
-        created_at: 1511354163389
+        created_at: date1
       },
       {
         body:
           "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.",
         article_id: 1,
-        created_by: "butter_bridge",
+        author: "butter_bridge",
         votes: 14,
-        created_at: 1479818163389
+        created_at: date2
       },
       {
         body:
           "Replacing the quiet elegance of the dark suit and tie with the casual indifference of these muted earth tones is a form of fashion suicide, but, uh, call me crazy — onyou it works.",
         article_id: 1,
-        created_by: "icellusedkars",
+        author: "icellusedkars",
         votes: 100,
-        created_at: 1448282163389
+        created_at: date3
       }
     ];
     expect(actualResult).to.eql(expectedResult);

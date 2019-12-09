@@ -40,7 +40,12 @@ exports.seed = function(knex) {
 
       const articleRef = makeRefObj(articleRows);
       const formattedComments = formatComments(commentData, articleRef);
-      console.log(formattedComments);
-      return knex("comments").insert(formattedComments);
+      // console.log(formattedComments);
+      return knex("comments")
+        .insert(formattedComments)
+        .returning("*");
+    })
+    .then(commentRows => {
+      console.log("Finished seeding!");
     });
 };
