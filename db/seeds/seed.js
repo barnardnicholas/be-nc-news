@@ -6,7 +6,8 @@ exports.seed = function(knex) {
   const usersInsertions = knex("users").insert(userData);
 
   return Promise.all([topicsInsertions, usersInsertions])
-    .then(() => {
+    .then(([topicsResponse, usersResponse]) => {
+      console.log(topicsResponse);
       /* 
       
       Your article data is currently in the incorrect format and will violate your SQL schema. 

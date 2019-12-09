@@ -1,8 +1,7 @@
 exports.formatDates = list => {
-  const listCopy = [...list];
-  return listCopy.map(article => {
+  return list.map(article => {
     const { created_at, ...keys } = article;
-    thisDate = new Date(created_at);
+    const thisDate = new Date(created_at);
     return {
       created_at: thisDate,
       ...keys
@@ -10,6 +9,12 @@ exports.formatDates = list => {
   });
 };
 
-exports.makeRefObj = list => {};
+exports.makeRefObj = (list, key, value) => {
+  let result = {};
+  list.forEach(item => {
+    result[item[key]] = item[value];
+  });
+  return result;
+};
 
 exports.formatComments = (comments, articleRef) => {};
