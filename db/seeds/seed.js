@@ -8,9 +8,15 @@ exports.seed = function(knex) {
   const usersInsertions = knex("users")
     .insert(userData)
     .returning("*");
-
-  return Promise.all([topicsInsertions, usersInsertions])
-    .then(([topicResponses, userResponses]) => {
+  return knex.migrate
+    .rollback()
+    .then(() => {
+      return knex.migrate.latest();
+    })
+    .then(() => {
+      return Promise.all([topicsInsertions, usersInsertions]);
+    })
+    .then(() => {
       /* 
       
       Your article data is currently in the incorrect format and will violate your SQL schema. 
@@ -19,16 +25,12 @@ exports.seed = function(knex) {
       
       Your comment insertions will depend on information from the seeded articles, so make sure to return the data after it's been seeded.
       */
-      // console.log("topics:", topicResponses);
-      // console.log("users:", userResponses);
       const formattedArticles = formatDates(articleData);
-      // console.log("formattedArticles:", formattedArticles);
       return knex("articles")
         .insert(formattedArticles)
         .returning("*");
     })
     .then(articleRows => {
-      // console.log("articleRows:", articleRows);
       /* 
 
       Your comment data is currently in the incorrect format and will violate your SQL schema. 
@@ -40,12 +42,11 @@ exports.seed = function(knex) {
 
       const articleRef = makeRefObj(articleRows);
       const formattedComments = formatComments(commentData, articleRef);
-      // console.log(formattedComments);
       return knex("comments")
         .insert(formattedComments)
         .returning("*");
     })
-    .then(commentRows => {
+    .then(() => {
       console.log("Finished seeding!");
     });
 };
