@@ -110,7 +110,7 @@ describe("formatDates", () => {
   });
 });
 
-describe.only("makeRefObj", () => {
+describe("makeRefObj", () => {
   it("should return an object", () => {
     const items = [];
     const actualResult = makeRefObj(items);
@@ -182,4 +182,107 @@ describe.only("makeRefObj", () => {
   });
 });
 
-describe("formatComments", () => {});
+describe.only("formatComments", () => {
+  it("should return an array of objects", () => {
+    const comments = [{}];
+    const ref = {};
+    const actualResult = formatComments(comments, ref);
+    expect(actualResult).to.be.an("array");
+    expect(actualResult[0]).to.be.an("object");
+  });
+  it("should return an empty array if passed an empty array", () => {
+    const comments = [];
+    const actualResult = formatComments(comments);
+    const expectedResult = [];
+    expect(actualResult).to.eql(expectedResult);
+  });
+  it("should correctly format an array of one comment", () => {
+    const comments = [
+      {
+        body: " I carry a log — yes. Is it funny to you? It is not to me.",
+        belongs_to: "Living in the shadow of a great man",
+        created_by: "icellusedkars",
+        votes: -100,
+        created_at: 1416746163389
+      }
+    ];
+    const ref = { "Living in the shadow of a great man": 1 };
+    const actualResult = formatComments(comments, ref);
+    const expectedResult = [
+      {
+        body: " I carry a log — yes. Is it funny to you? It is not to me.",
+        article_id: 1,
+        created_by: "icellusedkars",
+        votes: -100,
+        created_at: 1416746163389
+      }
+    ];
+    expect(actualResult).to.eql(expectedResult);
+  });
+  it("should correctly format an array of multiple comments", () => {
+    const comments = [
+      {
+        body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+        belongs_to: "They're not exactly dogs, are they?",
+        created_by: "butter_bridge",
+        votes: 16,
+        created_at: 1511354163389
+      },
+      {
+        body:
+          "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.",
+        belongs_to: "Living in the shadow of a great man",
+        created_by: "butter_bridge",
+        votes: 14,
+        created_at: 1479818163389
+      },
+      {
+        body:
+          "Replacing the quiet elegance of the dark suit and tie with the casual indifference of these muted earth tones is a form of fashion suicide, but, uh, call me crazy — onyou it works.",
+        belongs_to: "Living in the shadow of a great man",
+        created_by: "icellusedkars",
+        votes: 100,
+        created_at: 1448282163389
+      }
+    ];
+    const ref = {
+      "Living in the shadow of a great man": 1,
+      "They're not exactly dogs, are they?": 2
+    };
+    const actualResult = formatComments(comments, ref);
+    const expectedResult = [
+      {
+        body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+        article_id: 2,
+        created_by: "butter_bridge",
+        votes: 16,
+        created_at: 1511354163389
+      },
+      {
+        body:
+          "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.",
+        article_id: 1,
+        created_by: "butter_bridge",
+        votes: 14,
+        created_at: 1479818163389
+      },
+      {
+        body:
+          "Replacing the quiet elegance of the dark suit and tie with the casual indifference of these muted earth tones is a form of fashion suicide, but, uh, call me crazy — onyou it works.",
+        article_id: 1,
+        created_by: "icellusedkars",
+        votes: 100,
+        created_at: 1448282163389
+      }
+    ];
+    expect(actualResult).to.eql(expectedResult);
+  });
+  it("should not mutate original array or ref object", () => {
+    const comments = [{}];
+    const ref = {};
+    const refCopy = { ...ref };
+    const actualResult = formatComments(comments, ref);
+    expect(actualResult).to.not.equal(comments);
+    expect(ref).to.eql(refCopy);
+  });
+});

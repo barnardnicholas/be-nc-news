@@ -17,4 +17,9 @@ exports.makeRefObj = (list, key, value) => {
   return result;
 };
 
-exports.formatComments = (comments, articleRef) => {};
+exports.formatComments = (comments, articleRef) => {
+  return comments.map(comment => {
+    const { belongs_to, ...keys } = comment;
+    return { article_id: articleRef[comment.belongs_to], ...keys };
+  });
+};
