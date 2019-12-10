@@ -49,7 +49,7 @@ describe("SERVER", () => {
       });
     });
     describe("/articles", () => {
-      describe.only("GET:200 - Get all articles", () => {
+      describe("GET:200 - Get all articles", () => {
         it("returns 200 along with a list of articles", () => {
           return request(server)
             .get("/api/articles")
@@ -232,7 +232,29 @@ describe("SERVER", () => {
         });
       });
     });
-    describe("/comments", () => {});
+    describe("/comments", () => {
+      describe("PATCH:200 - Patch comment by ID", () => {
+        it("updates the number of votes on a comment", () => {
+          return request(server)
+            .patch("/api/comments/1")
+            .send({ inc_votes: -6 })
+            .expect(200)
+            .then(response => {
+              const expectedResult = {
+                body:
+                  "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+                article_id: 9,
+                author: "butter_bridge",
+                votes: 10
+              };
+              expect(response.body.comments.body).to.eql(expectedResult.body);
+              expect(response.body.comments.author).to.eql(expectedResult.author);
+              expect(response.body.comments.votes).to.eql(expectedResult.votes);
+              expect(response.body.comments.article_id).to.eql(expectedResult.article_id);
+            });
+        });
+      });
+    });
     describe("ERRORS", () => {});
   });
 });
