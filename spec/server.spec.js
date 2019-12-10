@@ -40,10 +40,7 @@ describe("SERVER", () => {
                 avatar_url: "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
               };
               expect(user.body).to.be.an("object");
-              expect(user.body.Users).to.be.an("array");
-              expect(user.body.Users.length).to.equal(1);
-              expect(user.body.Users[0]).to.be.an("object");
-              expect(user.body.Users[0]).eql(expectedResult);
+              expect(user.body).eql(expectedResult);
             });
         });
       });
@@ -87,10 +84,7 @@ describe("SERVER", () => {
                 topic: "mitch"
               };
               expect(article.body).to.be.an("object");
-              expect(article.body.Articles).to.be.an("array");
-              expect(article.body.Articles.length).to.equal(1);
-              expect(article.body.Articles[0]).to.be.an("object");
-              expect(article.body.Articles[0]).eql(expectedResult);
+              expect(article.body).eql(expectedResult);
             });
         });
       });
@@ -110,7 +104,7 @@ describe("SERVER", () => {
                 created_at: "2018-11-15T12:21:54.171+00:00",
                 topic: "mitch"
               };
-              expect(response).to.be.an("object");
+              expect(response.body).to.be.an("object");
               expect(response.body).to.eql(expectedResult);
             });
         });

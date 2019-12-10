@@ -17,7 +17,7 @@ const fetchArticleById = article_id => {
     .where("article_id", "=", article_id)
     .returning("*")
     .then(article => {
-      return article;
+      return article[0];
     });
 };
 
