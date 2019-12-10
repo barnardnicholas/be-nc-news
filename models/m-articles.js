@@ -6,7 +6,7 @@ const fetchAllArticles = () => {
     .select("*")
     .returning("*")
     .then(article => {
-      return article;
+      return { articles: article };
     });
 };
 
@@ -17,7 +17,7 @@ const fetchArticleById = article_id => {
     .where("article_id", "=", article_id)
     .returning("*")
     .then(article => {
-      return article[0];
+      return { article: article[0] };
     });
 };
 
@@ -35,7 +35,7 @@ const updateArticleById = (article_id, data) => {
         .returning("*");
     })
     .then(updatedArticle => {
-      return { article: updatedArticle[0] };
+      return { articles: updatedArticle[0] };
     });
 };
 

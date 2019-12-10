@@ -7,7 +7,7 @@ const fetchUserById = username => {
     .where("username", "=", username)
     .returning("*")
     .then(user => {
-      return user[0];
+      return { users: user[0] };
     });
 };
 

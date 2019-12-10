@@ -3,7 +3,7 @@ exports.getAllArticles = (req, res, next) => {
   console.log("Reached getAllArticles controller");
   fetchAllArticles()
     .then(article => {
-      res.status(200).send({ Articles: article });
+      res.status(200).send(article);
     })
     .catch(err => {
       next(err);

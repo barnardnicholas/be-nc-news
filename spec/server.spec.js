@@ -19,10 +19,10 @@ describe("SERVER", () => {
             .expect(200)
             .then(topics => {
               expect(topics.body).to.be.an("object");
-              expect(topics.body.Topics).to.be.an("array");
-              expect(topics.body.Topics.length).to.equal(3);
-              expect(topics.body.Topics[0]).to.be.an("object");
-              expect(topics.body.Topics[0]).to.have.keys("slug", "description");
+              expect(topics.body.topics).to.be.an("array");
+              expect(topics.body.topics.length).to.equal(3);
+              expect(topics.body.topics[0]).to.be.an("object");
+              expect(topics.body.topics[0]).to.have.keys("slug", "description");
             });
         });
       });
@@ -39,8 +39,8 @@ describe("SERVER", () => {
                 name: "jonny",
                 avatar_url: "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
               };
-              expect(user.body).to.be.an("object");
-              expect(user.body).eql(expectedResult);
+              expect(user.body.users).to.be.an("object");
+              expect(user.body.users).eql(expectedResult);
             });
         });
       });
@@ -53,10 +53,10 @@ describe("SERVER", () => {
             .expect(200)
             .then(articles => {
               expect(articles.body).to.be.an("object");
-              expect(articles.body.Articles).to.be.an("array");
-              expect(articles.body.Articles.length).to.be.greaterThan(0);
-              expect(articles.body.Articles[0]).to.be.an("object");
-              expect(articles.body.Articles[0]).to.have.keys(
+              expect(articles.body.articles).to.be.an("array");
+              expect(articles.body.articles.length).to.be.greaterThan(0);
+              expect(articles.body.articles[0]).to.be.an("object");
+              expect(articles.body.articles[0]).to.have.keys(
                 "article_id",
                 "title",
                 "body",
@@ -83,8 +83,8 @@ describe("SERVER", () => {
                 created_at: "2018-11-15T12:21:54.171+00:00",
                 topic: "mitch"
               };
-              expect(article.body).to.be.an("object");
-              expect(article.body).eql(expectedResult);
+              expect(article.body.article).to.be.an("object");
+              expect(article.body.article).eql(expectedResult);
             });
         });
       });
@@ -104,8 +104,8 @@ describe("SERVER", () => {
                 created_at: "2018-11-15T12:21:54.171+00:00",
                 topic: "mitch"
               };
-              expect(response.body.article).to.be.an("object");
-              expect(response.body.article).to.eql(expectedResult);
+              expect(response.body.articles).to.be.an("object");
+              expect(response.body.articles).to.eql(expectedResult);
             });
         });
       });

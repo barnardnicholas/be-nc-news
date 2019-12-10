@@ -6,7 +6,7 @@ const fetchAllTopics = () => {
     .select("*")
     .returning("*")
     .then(topics => {
-      return topics;
+      return { topics: topics };
     });
 };
 module.exports = { fetchAllTopics };
