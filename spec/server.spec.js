@@ -12,7 +12,7 @@ describe("SERVER", () => {
   });
   describe("/api", () => {
     describe("/topics", () => {
-      describe.only("GET:200 - Get all topics", () => {
+      describe("GET:200 - Get all topics", () => {
         it("returns 200 along with a list of topics", () => {
           return request(server)
             .get("/api/topics")
@@ -27,7 +27,27 @@ describe("SERVER", () => {
         });
       });
     });
-    describe("/users", () => {});
+    describe("/users", () => {
+      describe("GET:200 - Get user by username", () => {
+        it("returns a single user when passed the correct enpoint and username", () => {
+          return request(server)
+            .get("/api/users/butter_bridge")
+            .expect(200)
+            .then(user => {
+              const expectedResult = {
+                username: "butter_bridge",
+                name: "jonny",
+                avatar_url: "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+              };
+              expect(user.body).to.be.an("object");
+              expect(user.body.Users).to.be.an("array");
+              expect(user.body.Users.length).to.equal(1);
+              expect(user.body.Users[0]).to.be.an("object");
+              expect(user.body.Users[0]).eql(expectedResult);
+            });
+        });
+      });
+    });
     describe("/articles", () => {});
     describe("/comments", () => {});
   });
