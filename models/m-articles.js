@@ -21,4 +21,16 @@ const fetchArticleById = article_id => {
     });
 };
 
-module.exports = { fetchAllArticles, fetchArticleById };
+const updateArticleById = (article_id, data) => {
+  console.log("Reached updateArticleById model");
+  return connection
+    .from("articles")
+    .where("article_id", "=", article_id)
+    .update(data)
+    .returning("*")
+    .then(updatedArticle => {
+      return updatedArticle[0];
+    });
+};
+
+module.exports = { fetchAllArticles, fetchArticleById, updateArticleById };

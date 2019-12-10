@@ -8,8 +8,6 @@ const {
   getCommentsByArticleId
 } = require("../controllers/c-articles");
 
-articlesRouter.use("/", getAllArticles);
-
 articlesRouter
   .route("/:article_id")
   .get(getArticleById)
@@ -19,5 +17,7 @@ articlesRouter
   .route("/:article_id/comments")
   .post(postCommentByArticleId)
   .get(getCommentsByArticleId);
+
+articlesRouter.use("/", getAllArticles);
 
 module.exports = articlesRouter;

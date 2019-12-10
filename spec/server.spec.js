@@ -94,6 +94,27 @@ describe("SERVER", () => {
             });
         });
       });
+      describe("PATCH:200 - Patch article by ID", () => {
+        it("returns an updated article when sent a patch request", () => {
+          return request(server)
+            .patch("/api/articles/1")
+            .send({ body: "I find this existence extremely challenging" })
+            .expect(200)
+            .then(response => {
+              const expectedResult = {
+                article_id: 1,
+                title: "Living in the shadow of a great man",
+                body: "I find this existence extremely challenging",
+                votes: 100,
+                author: "butter_bridge",
+                created_at: "2018-11-15T12:21:54.171+00:00",
+                topic: "mitch"
+              };
+              expect(response).to.be.an("object");
+              expect(response.body).to.eql(expectedResult);
+            });
+        });
+      });
     });
     describe("/comments", () => {});
     describe("ERRORS", () => {});
