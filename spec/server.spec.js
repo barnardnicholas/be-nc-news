@@ -254,6 +254,13 @@ describe("SERVER", () => {
             });
         });
       });
+      describe("DELETE:204 - Deletes a comment by ID", () => {
+        it("deletes a comment when provided with a comment_id", () => {
+          return request(server)
+            .delete("/api/comments/1")
+            .expect(204);
+        });
+      });
     });
     describe("ERRORS", () => {});
   });

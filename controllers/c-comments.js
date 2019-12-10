@@ -1,4 +1,4 @@
-const { updateCommentById } = require("../models/m-comments");
+const { updateCommentById, removeCommentById } = require("../models/m-comments");
 
 exports.patchCommentById = (req, res, next) => {
   // console.log("Reached patchCommentById controller");
@@ -8,4 +8,7 @@ exports.patchCommentById = (req, res, next) => {
 };
 exports.deleteCommentById = (req, res, next) => {
   console.log("Reached deleteCommentById controller");
+  removeCommentById(req.params.comment_id).then(() => {
+    res.sendStatus(204);
+  });
 };

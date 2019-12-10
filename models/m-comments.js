@@ -1,7 +1,7 @@
 const connection = require("../db/connection");
 
 const updateCommentById = (comment_id, data) => {
-  console.log("Reached updateCommentById model");
+  // console.log("Reached updateCommentById model");
   return connection("comments")
     .where("comment_id", "=", comment_id)
     .returning("votes")
@@ -18,4 +18,14 @@ const updateCommentById = (comment_id, data) => {
     });
 };
 
-module.exports = { updateCommentById };
+const removeCommentById = comment_id => {
+  console.log("Reached removeCommentById model");
+  return connection("comments")
+    .where("comment_id", "=", comment_id)
+    .del()
+    .then(() => {
+      console.log("Comment deleted");
+    });
+};
+
+module.exports = { updateCommentById, removeCommentById };

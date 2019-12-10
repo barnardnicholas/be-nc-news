@@ -32,17 +32,17 @@ const fetchArticleById = article_id => {
     });
 };
 
-const updateArticleById = (article_id, data) => {
+const updateArticleById = (article_id, votes) => {
   // console.log("Reached updateArticleById model");
   return connection("articles")
     .where("article_id", "=", article_id)
     .returning("votes")
     .then(existingVotes => {
-      const newData = { votes: existingVotes[0].votes + data.inc_votes };
+      const newVotes = { votes: existingVotes[0].votes + votes.inc_votes };
       return connection
         .from("articles")
         .where("article_id", "=", article_id)
-        .update(newData)
+        .update(newVotes)
         .returning("*");
     })
     .then(updatedArticle => {
