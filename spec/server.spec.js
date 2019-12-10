@@ -49,6 +49,28 @@ describe("SERVER", () => {
       });
     });
     describe("/articles", () => {
+      describe("GET:200 - Get all articles", () => {
+        it("returns 200 along with a list of articles", () => {
+          return request(server)
+            .get("/api/articles")
+            .expect(200)
+            .then(articles => {
+              expect(articles.body).to.be.an("object");
+              expect(articles.body.Articles).to.be.an("array");
+              expect(articles.body.Articles.length).to.be.greaterThan(0);
+              expect(articles.body.Articles[0]).to.be.an("object");
+              expect(articles.body.Articles[0]).to.have.keys(
+                "article_id",
+                "title",
+                "body",
+                "votes",
+                "author",
+                "created_at",
+                "topic"
+              );
+            });
+        });
+      });
       describe("GET:200 - Get article by article_id", () => {
         it("returns a single article when passed the correct endpoint and article id number", () => {
           return request(server)

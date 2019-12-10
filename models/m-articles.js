@@ -1,5 +1,15 @@
 const connection = require("../db/connection");
 
+const fetchAllArticles = () => {
+  console.log("Reached fetchAllArticles model");
+  return connection("articles")
+    .select("*")
+    .returning("*")
+    .then(article => {
+      return article;
+    });
+};
+
 const fetchArticleById = article_id => {
   console.log("Reached fetchArticleById model");
   return connection("articles")
@@ -11,4 +21,4 @@ const fetchArticleById = article_id => {
     });
 };
 
-module.exports = { fetchArticleById };
+module.exports = { fetchAllArticles, fetchArticleById };
