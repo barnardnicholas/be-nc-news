@@ -104,8 +104,8 @@ describe("SERVER", () => {
                 created_at: "2018-11-15T12:21:54.171+00:00",
                 topic: "mitch"
               };
-              expect(response.body).to.be.an("object");
-              expect(response.body).to.eql(expectedResult);
+              expect(response.body.article).to.be.an("object");
+              expect(response.body.article).to.eql(expectedResult);
             });
         });
       });

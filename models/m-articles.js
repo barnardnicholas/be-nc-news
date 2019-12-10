@@ -35,7 +35,7 @@ const updateArticleById = (article_id, data) => {
         .returning("*");
     })
     .then(updatedArticle => {
-      return updatedArticle[0];
+      return { article: updatedArticle[0] };
     });
 };
 
