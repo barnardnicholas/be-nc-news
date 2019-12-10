@@ -92,14 +92,14 @@ describe("SERVER", () => {
         it("returns an updated article when sent a patch request", () => {
           return request(server)
             .patch("/api/articles/1")
-            .send({ body: "I find this existence extremely challenging" })
+            .send({ inc_votes: -1 })
             .expect(200)
             .then(response => {
               const expectedResult = {
                 article_id: 1,
                 title: "Living in the shadow of a great man",
-                body: "I find this existence extremely challenging",
-                votes: 100,
+                body: "I find this existence challenging",
+                votes: 99,
                 author: "butter_bridge",
                 created_at: "2018-11-15T12:21:54.171+00:00",
                 topic: "mitch"

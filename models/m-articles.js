@@ -23,11 +23,17 @@ const fetchArticleById = article_id => {
 
 const updateArticleById = (article_id, data) => {
   console.log("Reached updateArticleById model");
-  return connection
-    .from("articles")
+  return connection("articles")
     .where("article_id", "=", article_id)
-    .update(data)
-    .returning("*")
+    .returning("votes")
+    .then(existingVotes => {
+      const newData = { votes: existingVotes[0].votes + data.inc_votes };
+      return connection
+        .from("articles")
+        .where("article_id", "=", article_id)
+        .update(newData)
+        .returning("*");
+    })
     .then(updatedArticle => {
       return updatedArticle[0];
     });

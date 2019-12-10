@@ -14,7 +14,7 @@ server.use("/api", apiRouter);
 
 server.use((err, req, res, next) => {
   console.log("--- In the last error handler ---");
-  console.log(err);
+  // console.log(err);
 });
 
 server.use(sqlErrors);
