@@ -1,12 +1,7 @@
 const express = require("express");
 const server = express();
 const apiRouter = require("./router/r-api");
-const {
-  badRequest,
-  routeNotFound,
-  sqlErrors,
-  errorCatcher
-} = require("./error-handlers/error-handlers");
+const { sqlErrors, errorCatcher } = require("./error-handlers/error-handlers");
 
 server.use(express.json());
 
@@ -19,10 +14,6 @@ server.use((err, req, res, next) => {
 
 server.use(sqlErrors);
 
-server.use(badRequest);
-
-server.use(errorCatcher);
-
-server.all("/*", routeNotFound);
+server.all("/*", errorCatcher);
 
 module.exports = server;

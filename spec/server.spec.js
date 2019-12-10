@@ -15,6 +15,24 @@ describe("SERVER", () => {
   });
   describe("/api", () => {
     describe("/topics", () => {
+      describe("ERRORS", () => {
+        it("GET:404 - bad path to /api/topics", () => {
+          return request(server)
+            .get("/api/topics/wrong")
+            .expect(404)
+            .then(response => {
+              expect(response.body.msg).to.eql("No such endpoint");
+            });
+        });
+        it("POST:405 - bad method to /api/topics", () => {
+          return request(server)
+            .post("/api/topics")
+            .expect(405)
+            .then(response => {
+              expect(response.body.msg).to.eql("Method not allowed");
+            });
+        });
+      });
       describe("GET:200 - Get all topics", () => {
         it("returns 200 along with a list of topics", () => {
           return request(server)
@@ -31,6 +49,24 @@ describe("SERVER", () => {
       });
     });
     describe("/users", () => {
+      describe("ERRORS", () => {
+        it("GET:404 - bad path to /api/users", () => {
+          return request(server)
+            .get("/api/uses")
+            .expect(404)
+            .then(response => {
+              expect(response.body.msg).to.eql("No such endpoint");
+            });
+        });
+        it("POST:405 - bad method to /api/users", () => {
+          return request(server)
+            .post("/api/users/1")
+            .expect(405)
+            .then(response => {
+              expect(response.body.msg).to.eql("Method not allowed");
+            });
+        });
+      });
       describe("GET:200 - Get user by username", () => {
         it("returns a single user when passed the correct enpoint and username", () => {
           return request(server)
@@ -49,6 +85,24 @@ describe("SERVER", () => {
       });
     });
     describe("/articles", () => {
+      describe("ERRORS", () => {
+        it("GET:404 - bad path to /api/articles", () => {
+          return request(server)
+            .get("/api/articless")
+            .expect(404)
+            .then(response => {
+              expect(response.body.msg).to.eql("No such endpoint");
+            });
+        });
+        it("POST:405 - bad method to /api/articles", () => {
+          return request(server)
+            .post("/api/articles/1")
+            .expect(405)
+            .then(response => {
+              expect(response.body.msg).to.eql("Method not allowed");
+            });
+        });
+      });
       describe("GET:200 - Get all articles", () => {
         it("returns 200 along with a list of articles", () => {
           return request(server)
@@ -233,6 +287,24 @@ describe("SERVER", () => {
       });
     });
     describe("/comments", () => {
+      describe("ERRORS", () => {
+        it("GET:404 - bad path to /api/comments", () => {
+          return request(server)
+            .get("/api/cmments")
+            .expect(404)
+            .then(response => {
+              expect(response.body.msg).to.eql("No such endpoint");
+            });
+        });
+        it("POST:405 - bad method to /api/comments", () => {
+          return request(server)
+            .get("/api/comments/1")
+            .expect(405)
+            .then(response => {
+              expect(response.body.msg).to.eql("Method not allowed");
+            });
+        });
+      });
       describe("PATCH:200 - Patch comment by ID", () => {
         it("updates the number of votes on a comment", () => {
           return request(server)
@@ -262,6 +334,5 @@ describe("SERVER", () => {
         });
       });
     });
-    describe("ERRORS", () => {});
   });
 });
