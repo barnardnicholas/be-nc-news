@@ -5,9 +5,11 @@ const {
   insertCommentByArticleId,
   fetchCommentsByArticleId
 } = require("../models/m-articles");
+
 exports.getAllArticles = (req, res, next) => {
   // console.log("Reached getAllArticles controller");
-  fetchAllArticles()
+  const { sort_by, order, author, topic } = req.query;
+  fetchAllArticles(sort_by, order, author, topic)
     .then(article => {
       res.status(200).send(article);
     })
@@ -15,6 +17,7 @@ exports.getAllArticles = (req, res, next) => {
       next(err);
     });
 };
+
 exports.getArticleById = (req, res, next) => {
   // console.log("Reached getArticleById controller");
   fetchArticleById(req.params.article_id)
@@ -25,6 +28,7 @@ exports.getArticleById = (req, res, next) => {
       next(err);
     });
 };
+
 exports.patchArticleById = (req, res, next) => {
   // console.log("Reached patchArticleById controller");
   updateArticleById(req.params.article_id, req.body)
@@ -35,6 +39,7 @@ exports.patchArticleById = (req, res, next) => {
       next(err);
     });
 };
+
 exports.postCommentByArticleId = (req, res, next) => {
   // console.log("Reached postCommentByArticleId controller");
   insertCommentByArticleId(req.params.article_id, req.body)
@@ -45,6 +50,7 @@ exports.postCommentByArticleId = (req, res, next) => {
       next(err);
     });
 };
+
 exports.getCommentsByArticleId = (req, res, next) => {
   // console.log("Reached getCommentsByArticleId controller");
   const { sort_by } = req.query;

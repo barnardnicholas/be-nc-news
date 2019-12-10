@@ -1,9 +1,20 @@
 const connection = require("../db/connection");
 
-const fetchAllArticles = () => {
+const fetchAllArticles = (sort_by = "created_at", order = "asc", author, topic) => {
   // console.log("Reached fetchAllArticles model");
   return connection("articles")
     .select("*")
+    .orderBy(sort_by, order)
+    .modify(query => {
+      if (author !== undefined) {
+        return query.where("author", "=", author);
+      }
+    })
+    .modify(query => {
+      if (topic !== undefined) {
+        return query.where("topic", "=", topic);
+      }
+    })
     .returning("*")
     .then(article => {
       return { articles: article };

@@ -49,7 +49,7 @@ describe("SERVER", () => {
       });
     });
     describe("/articles", () => {
-      describe("GET:200 - Get all articles", () => {
+      describe.only("GET:200 - Get all articles", () => {
         it("returns 200 along with a list of articles", () => {
           return request(server)
             .get("/api/articles")
@@ -68,6 +68,54 @@ describe("SERVER", () => {
                 "created_at",
                 "topic"
               );
+            });
+        });
+        it("accepts queries for sort_by", () => {
+          return request(server)
+            .get("/api/articles?sort_by=author")
+            .expect(200)
+            .then(articles => {
+              expect(articles.body.articles).to.be.ascendingBy("author");
+            });
+        });
+        it("accepts queries for order", () => {
+          return request(server)
+            .get("/api/articles?order=desc")
+            .expect(200)
+            .then(articles => {
+              expect(articles.body.articles).to.be.descendingBy("created_at");
+            });
+        });
+        it("accepts queries for author", () => {
+          return request(server)
+            .get("/api/articles?author=butter_bridge")
+            .expect(200)
+            .then(articles => {
+              articles.body.articles.forEach(article => {
+                expect(article.author).to.equal("butter_bridge");
+              });
+            });
+        });
+        it("accepts queries for topic", () => {
+          return request(server)
+            .get("/api/articles?topic=mitch")
+            .expect(200)
+            .then(articles => {
+              articles.body.articles.forEach(article => {
+                expect(article.topic).to.equal("mitch");
+              });
+            });
+        });
+        it("accepts multiple queries", () => {
+          return request(server)
+            .get("/api/articles?sort_by=votes&order=desc&author=butter_bridge&topic=mitch")
+            .expect(200)
+            .then(articles => {
+              expect(articles.body.articles).to.be.descendingBy("votes");
+              articles.body.articles.forEach(article => {
+                expect(article.author).to.equal("butter_bridge");
+                expect(article.topic).to.equal("mitch");
+              });
             });
         });
       });
@@ -135,7 +183,7 @@ describe("SERVER", () => {
             });
         });
       });
-      describe.only("GET:200 - Get comments by article id", () => {
+      describe("GET:200 - Get comments by article id", () => {
         it("returns an array of comments for a given article", () => {
           return request(server)
             .get("/api/articles/1/comments")
