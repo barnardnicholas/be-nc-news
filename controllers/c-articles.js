@@ -1,10 +1,12 @@
-const {} = require("../models/m-articles");
-
+const { fetchArticleById } = require("../models/m-articles");
 exports.getAllArticles = (req, res, next) => {
   console.log("Reached getAllArticles controller");
 };
 exports.getArticleById = (req, res, next) => {
   console.log("Reached getArticleById controller");
+  fetchArticleById(req.params.article_id).then(article => {
+    res.status(200).send({ Articles: article });
+  });
 };
 exports.patchArticleById = (req, res, next) => {
   console.log("Reached patchArticleById controller");

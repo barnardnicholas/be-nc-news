@@ -48,7 +48,32 @@ describe("SERVER", () => {
         });
       });
     });
-    describe("/articles", () => {});
+    describe("/articles", () => {
+      describe("GET:200 - Get article by article_id", () => {
+        it("returns a single article when passed the correct endpoint and article id number", () => {
+          return request(server)
+            .get("/api/articles/1")
+            .expect(200)
+            .then(article => {
+              const expectedResult = {
+                article_id: 1,
+                title: "Living in the shadow of a great man",
+                body: "I find this existence challenging",
+                votes: 100,
+                author: "butter_bridge",
+                created_at: "2018-11-15T12:21:54.171+00:00",
+                topic: "mitch"
+              };
+              expect(article.body).to.be.an("object");
+              expect(article.body.Articles).to.be.an("array");
+              expect(article.body.Articles.length).to.equal(1);
+              expect(article.body.Articles[0]).to.be.an("object");
+              expect(article.body.Articles[0]).eql(expectedResult);
+            });
+        });
+      });
+    });
     describe("/comments", () => {});
+    describe("ERRORS", () => {});
   });
 });
