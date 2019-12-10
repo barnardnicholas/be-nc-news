@@ -1,7 +1,10 @@
 const server = require("../server.js");
+const chai = require("chai");
 const { expect } = require("chai");
+const chaiSorted = require("sams-chai-sorted");
 const connection = require("../db/connection");
 const request = require("supertest");
+chai.use(chaiSorted);
 
 describe("SERVER", () => {
   beforeEach(() => {
@@ -109,7 +112,7 @@ describe("SERVER", () => {
             });
         });
       });
-      describe.only("POST:201 - Post comment on article", () => {
+      describe("POST:201 - Post comment on article", () => {
         it("returns the posted comment, having updated the database", () => {
           const expectedResult = {
             body: "lovely",
@@ -129,6 +132,54 @@ describe("SERVER", () => {
               expect(comment.body.comments.votes).to.eql(expectedResult.votes);
               expect(comment.body.comments.author).to.eql(expectedResult.author);
               expect(comment.body.comments).to.include.keys("created_at", "comment_id");
+            });
+        });
+      });
+      describe.only("GET:200 - Get comments by article id", () => {
+        it("returns an array of comments for a given article", () => {
+          return request(server)
+            .get("/api/articles/1/comments")
+            .expect(200)
+            .then(comments => {
+              expect(comments.body.comments).to.be.an("array");
+              expect(comments.body.comments[0]).to.include.keys(
+                "comment_id",
+                "votes",
+                "created_at",
+                "author",
+                "body"
+              );
+              comments.body.comments.forEach(comment => {
+                expect(comment).to.be.an("object");
+                expect(comment.article_id).to.equal(1);
+              });
+            });
+        });
+        it("defaults sort_by and order with no queries passed", () => {
+          return request(server)
+            .get("/api/articles/1/comments")
+            .expect(200)
+            .then(comments => {
+              expect(comments.body.comments).to.be.an("array");
+              expect(comments.body.comments).to.be.ascendingBy("created_at");
+            });
+        });
+        it("accepts sort_by queries for columns", () => {
+          return request(server)
+            .get("/api/articles/1/comments?sort_by=author")
+            .expect(200)
+            .then(comments => {
+              expect(comments.body.comments).to.be.an("array");
+              expect(comments.body.comments).to.be.ascendingBy("author");
+            });
+        });
+        it("accepts sort_by and order queries for columns", () => {
+          return request(server)
+            .get("/api/articles/1/comments?sort_by=article_id&order=desc")
+            .expect(200)
+            .then(comments => {
+              expect(comments.body.comments).to.be.an("array");
+              expect(comments.body.comments).to.be.descendingBy("article_id");
             });
         });
       });

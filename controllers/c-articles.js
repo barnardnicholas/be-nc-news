@@ -2,10 +2,11 @@ const {
   fetchAllArticles,
   fetchArticleById,
   updateArticleById,
-  insertCommentByArticleId
+  insertCommentByArticleId,
+  fetchCommentsByArticleId
 } = require("../models/m-articles");
 exports.getAllArticles = (req, res, next) => {
-  console.log("Reached getAllArticles controller");
+  // console.log("Reached getAllArticles controller");
   fetchAllArticles()
     .then(article => {
       res.status(200).send(article);
@@ -15,7 +16,7 @@ exports.getAllArticles = (req, res, next) => {
     });
 };
 exports.getArticleById = (req, res, next) => {
-  console.log("Reached getArticleById controller");
+  // console.log("Reached getArticleById controller");
   fetchArticleById(req.params.article_id)
     .then(article => {
       res.status(200).send(article);
@@ -25,7 +26,7 @@ exports.getArticleById = (req, res, next) => {
     });
 };
 exports.patchArticleById = (req, res, next) => {
-  console.log("Reached patchArticleById controller");
+  // console.log("Reached patchArticleById controller");
   updateArticleById(req.params.article_id, req.body)
     .then(updatedArticle => {
       res.status(200).send(updatedArticle);
@@ -35,7 +36,7 @@ exports.patchArticleById = (req, res, next) => {
     });
 };
 exports.postCommentByArticleId = (req, res, next) => {
-  console.log("Reached postCommentByArticleId controller");
+  // console.log("Reached postCommentByArticleId controller");
   insertCommentByArticleId(req.params.article_id, req.body)
     .then(postedComment => {
       res.status(201).send(postedComment);
@@ -45,5 +46,13 @@ exports.postCommentByArticleId = (req, res, next) => {
     });
 };
 exports.getCommentsByArticleId = (req, res, next) => {
-  console.log("Reached getCommentsByArticleId controller");
+  // console.log("Reached getCommentsByArticleId controller");
+  const { sort_by } = req.query;
+  fetchCommentsByArticleId(req.params.article_id, sort_by)
+    .then(returnedComments => {
+      res.status(200).send(returnedComments);
+    })
+    .catch(err => {
+      next(err);
+    });
 };

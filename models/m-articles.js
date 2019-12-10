@@ -1,7 +1,7 @@
 const connection = require("../db/connection");
 
 const fetchAllArticles = () => {
-  console.log("Reached fetchAllArticles model");
+  // console.log("Reached fetchAllArticles model");
   return connection("articles")
     .select("*")
     .returning("*")
@@ -11,7 +11,7 @@ const fetchAllArticles = () => {
 };
 
 const fetchArticleById = article_id => {
-  console.log("Reached fetchArticleById model");
+  // console.log("Reached fetchArticleById model");
   return connection("articles")
     .select("*")
     .where("article_id", "=", article_id)
@@ -22,7 +22,7 @@ const fetchArticleById = article_id => {
 };
 
 const updateArticleById = (article_id, data) => {
-  console.log("Reached updateArticleById model");
+  // console.log("Reached updateArticleById model");
   return connection("articles")
     .where("article_id", "=", article_id)
     .returning("votes")
@@ -40,7 +40,7 @@ const updateArticleById = (article_id, data) => {
 };
 
 const insertCommentByArticleId = (article_id, comment) => {
-  console.log("Reached insertCommentByArticleId model");
+  // console.log("Reached insertCommentByArticleId model");
   const datePosted = new Date();
   const completeComment = {
     author: comment.username,
@@ -57,9 +57,21 @@ const insertCommentByArticleId = (article_id, comment) => {
     });
 };
 
+const fetchCommentsByArticleId = (article_id, sort_by = "created_at", order = "asc") => {
+  // console.log("Reached fetchCommentsByArticleId model");
+  return connection("comments")
+    .where("article_id", "=", article_id)
+    .orderBy(sort_by, order)
+    .returning("*")
+    .then(comments => {
+      return { comments: comments };
+    });
+};
+
 module.exports = {
   fetchAllArticles,
   fetchArticleById,
   updateArticleById,
-  insertCommentByArticleId
+  insertCommentByArticleId,
+  fetchCommentsByArticleId
 };
