@@ -109,6 +109,29 @@ describe("SERVER", () => {
             });
         });
       });
+      describe.only("POST:201 - Post comment on article", () => {
+        it("returns the posted comment, having updated the database", () => {
+          const expectedResult = {
+            body: "lovely",
+            article_id: 3,
+            author: "rogersop",
+            votes: 0,
+            comment_id: 19
+          };
+          return request(server)
+            .post("/api/articles/3/comments")
+            .send({ username: "rogersop", body: "lovely" })
+            .expect(201)
+            .then(comment => {
+              expect(comment.body.comments).to.be.an("object");
+              expect(comment.body.comments.body).to.eql(expectedResult.body);
+              expect(comment.body.comments.article_id).to.eql(expectedResult.article_id);
+              expect(comment.body.comments.votes).to.eql(expectedResult.votes);
+              expect(comment.body.comments.author).to.eql(expectedResult.author);
+              expect(comment.body.comments).to.include.keys("created_at", "comment_id");
+            });
+        });
+      });
     });
     describe("/comments", () => {});
     describe("ERRORS", () => {});

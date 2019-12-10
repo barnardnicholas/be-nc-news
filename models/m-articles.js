@@ -39,4 +39,27 @@ const updateArticleById = (article_id, data) => {
     });
 };
 
-module.exports = { fetchAllArticles, fetchArticleById, updateArticleById };
+const insertCommentByArticleId = (article_id, comment) => {
+  console.log("Reached insertCommentByArticleId model");
+  const datePosted = new Date();
+  const completeComment = {
+    author: comment.username,
+    votes: 0,
+    body: comment.body,
+    article_id: article_id,
+    created_at: datePosted
+  };
+  return connection("comments")
+    .insert(completeComment)
+    .returning("*")
+    .then(postedComment => {
+      return { comments: postedComment[0] };
+    });
+};
+
+module.exports = {
+  fetchAllArticles,
+  fetchArticleById,
+  updateArticleById,
+  insertCommentByArticleId
+};

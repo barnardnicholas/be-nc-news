@@ -1,4 +1,9 @@
-const { fetchAllArticles, fetchArticleById, updateArticleById } = require("../models/m-articles");
+const {
+  fetchAllArticles,
+  fetchArticleById,
+  updateArticleById,
+  insertCommentByArticleId
+} = require("../models/m-articles");
 exports.getAllArticles = (req, res, next) => {
   console.log("Reached getAllArticles controller");
   fetchAllArticles()
@@ -31,6 +36,13 @@ exports.patchArticleById = (req, res, next) => {
 };
 exports.postCommentByArticleId = (req, res, next) => {
   console.log("Reached postCommentByArticleId controller");
+  insertCommentByArticleId(req.params.article_id, req.body)
+    .then(postedComment => {
+      res.status(201).send(postedComment);
+    })
+    .catch(err => {
+      next(err);
+    });
 };
 exports.getCommentsByArticleId = (req, res, next) => {
   console.log("Reached getCommentsByArticleId controller");
