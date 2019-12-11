@@ -165,6 +165,30 @@ describe("SERVER", () => {
               expect(response.body.msg).to.eql("Bad request");
             });
         });
+        it("GET:404 - invalid query sent to /api/articles?author=nobody", () => {
+          return request(server)
+            .get("/api/articles?author=nobody")
+            .expect(404)
+            .then(response => {
+              expect(response.body.msg).to.eql("Not found");
+            });
+        });
+        it("GET:404 - invalid query sent to /api/articles?topic=nothing", () => {
+          return request(server)
+            .get("/api/articles?topic=nothing")
+            .expect(404)
+            .then(response => {
+              expect(response.body.msg).to.eql("Not found");
+            });
+        });
+        it("GET:404 - invalid query sent to /api/articles?sort_by=not-a-column", () => {
+          return request(server)
+            .get("/api/articles?sort_by=not-a-column")
+            .expect(404)
+            .then(response => {
+              expect(response.body.msg).to.eql("Not found");
+            });
+        });
       });
       describe("GET:200 - Get all articles", () => {
         it("returns 200 along with a list of articles", () => {

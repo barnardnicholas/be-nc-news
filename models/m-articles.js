@@ -24,7 +24,11 @@ const fetchAllArticles = (
       }
     })
     .then(articles => {
-      return { articles: articles };
+      if (articles.length === 0) {
+        return Promise.reject({ status: 404, msg: "Not found" });
+      } else {
+        return { articles: articles };
+      }
     });
 };
 
@@ -44,13 +48,13 @@ const fetchArticleById = article_id => {
     });
 };
 
-const updateArticleById = (article_id, votes) => {
+const updateArticleById = (article_id, votes = 0) => {
   return connection("articles")
     .where("article_id", "=", article_id)
     .increment("votes", votes.inc_votes)
     .returning("*")
     .then(updatedArticle => {
-      return { articles: updatedArticle[0] };
+      return { article: updatedArticle[0] };
     });
 };
 
