@@ -1,5 +1,4 @@
 const connection = require("../db/connection");
-const { apiRes } = require("../db/data/api-data");
 const fs = require("fs");
 
 const fetchApi = cb => {

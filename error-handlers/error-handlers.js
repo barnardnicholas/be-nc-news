@@ -26,7 +26,7 @@ exports.sqlErrors = (err, req, res, next) => {
   const errorCodes = {
     "42703": [404, "Not found"],
     "23502": [400, "Bad request"],
-    "22P02": [404, "Not found"],
+    "22P02": [400, "Bad request"],
     "23503": [400, "Bad request"]
   };
   if (errorCodes.hasOwnProperty(err.code)) {
