@@ -1,6 +1,11 @@
 const connection = require("../db/connection");
 
-const fetchAllArticles = (sort_by = "created_at", order = "asc", author, topic) => {
+const fetchAllArticles = (
+  sort_by = "created_at",
+  order = "asc",
+  author,
+  topic
+) => {
   return connection("articles")
     .select("*")
     .orderBy(sort_by, order)
@@ -14,7 +19,6 @@ const fetchAllArticles = (sort_by = "created_at", order = "asc", author, topic) 
         return query.where("topic", "=", topic);
       }
     })
-    .returning("*")
     .then(article => {
       return { articles: article };
     });
@@ -29,6 +33,9 @@ const fetchArticleById = article_id => {
     .where("articles.article_id", "=", article_id)
     .groupBy("articles.article_id")
     .then(article => {
+      if (article.length === 0) {
+        return Promise.reject({ status: 404, msg: "Not found" });
+      }
       return { article: article[0] };
     });
 };
@@ -60,11 +67,14 @@ const insertCommentByArticleId = (article_id, comment) => {
     });
 };
 
-const fetchCommentsByArticleId = (article_id, sort_by = "created_at", order = "asc") => {
+const fetchCommentsByArticleId = (
+  article_id,
+  sort_by = "created_at",
+  order = "asc"
+) => {
   return connection("comments")
     .where("article_id", "=", article_id)
     .orderBy(sort_by, order)
-    .returning("*")
     .then(comments => {
       return { comments: comments };
     });

@@ -14,6 +14,16 @@ describe("SERVER", () => {
     return connection.destroy();
   });
   describe("/api", () => {
+    describe("ERRORS", () => {
+      it("GET:404 - path path to /api", () => {
+        return request(server)
+          .get("/api/badpath")
+          .expect(404)
+          .then(response => {
+            expect(response.body.msg).to.eql("Not found");
+          });
+      });
+    });
     describe("/topics", () => {
       describe("ERRORS", () => {
         it("GET:404 - bad path to /api/topics", () => {
@@ -21,7 +31,7 @@ describe("SERVER", () => {
             .get("/api/topics/wrong")
             .expect(404)
             .then(response => {
-              expect(response.body.msg).to.eql("No such endpoint");
+              expect(response.body.msg).to.eql("Not found");
             });
         });
         it("POST:405 - bad method to /api/topics", () => {
@@ -32,6 +42,7 @@ describe("SERVER", () => {
               expect(response.body.msg).to.eql("Method not allowed");
             });
         });
+        it("", () => {});
       });
       describe("GET:200 - Get all topics", () => {
         it("returns 200 along with a list of topics", () => {
@@ -55,7 +66,15 @@ describe("SERVER", () => {
             .get("/api/uses")
             .expect(404)
             .then(response => {
-              expect(response.body.msg).to.eql("No such endpoint");
+              expect(response.body.msg).to.eql("Not found");
+            });
+        });
+        it("GET:400 - incorrect data type to /api/users/:username", () => {
+          return request(server)
+            .get("/api/users/6")
+            .expect(400)
+            .then(response => {
+              expect(response.body.msg).to.eql("Bad request");
             });
         });
         it("POST:405 - bad method to /api/users", () => {
@@ -76,7 +95,8 @@ describe("SERVER", () => {
               const expectedResult = {
                 username: "butter_bridge",
                 name: "jonny",
-                avatar_url: "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+                avatar_url:
+                  "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
               };
               expect(user.body.users).to.be.an("object");
               expect(user.body.users).eql(expectedResult);
@@ -91,10 +111,18 @@ describe("SERVER", () => {
             .get("/api/articless")
             .expect(404)
             .then(response => {
-              expect(response.body.msg).to.eql("No such endpoint");
+              expect(response.body.msg).to.eql("Not found");
             });
         });
-        it("POST:405 - bad method to /api/articles", () => {
+        it("GET:404 - bad path to /api/articles/article_id", () => {
+          return request(server)
+            .get("/api/articles/0")
+            .expect(404)
+            .then(response => {
+              expect(response.body.msg).to.eql("Not found");
+            });
+        });
+        it("POST:405 - bad method to /api/articles/article_id", () => {
           return request(server)
             .post("/api/articles/1")
             .expect(405)
@@ -162,7 +190,9 @@ describe("SERVER", () => {
         });
         it("accepts multiple queries", () => {
           return request(server)
-            .get("/api/articles?sort_by=votes&order=desc&author=butter_bridge&topic=mitch")
+            .get(
+              "/api/articles?sort_by=votes&order=desc&author=butter_bridge&topic=mitch"
+            )
             .expect(200)
             .then(articles => {
               expect(articles.body.articles).to.be.descendingBy("votes");
@@ -231,10 +261,17 @@ describe("SERVER", () => {
             .then(comment => {
               expect(comment.body.comments).to.be.an("object");
               expect(comment.body.comments.body).to.eql(expectedResult.body);
-              expect(comment.body.comments.article_id).to.eql(expectedResult.article_id);
+              expect(comment.body.comments.article_id).to.eql(
+                expectedResult.article_id
+              );
               expect(comment.body.comments.votes).to.eql(expectedResult.votes);
-              expect(comment.body.comments.author).to.eql(expectedResult.author);
-              expect(comment.body.comments).to.include.keys("created_at", "comment_id");
+              expect(comment.body.comments.author).to.eql(
+                expectedResult.author
+              );
+              expect(comment.body.comments).to.include.keys(
+                "created_at",
+                "comment_id"
+              );
             });
         });
       });
@@ -294,7 +331,7 @@ describe("SERVER", () => {
             .get("/api/cmments")
             .expect(404)
             .then(response => {
-              expect(response.body.msg).to.eql("No such endpoint");
+              expect(response.body.msg).to.eql("Not found");
             });
         });
         it("POST:405 - bad method to /api/comments", () => {
@@ -321,9 +358,13 @@ describe("SERVER", () => {
                 votes: 10
               };
               expect(response.body.comments.body).to.eql(expectedResult.body);
-              expect(response.body.comments.author).to.eql(expectedResult.author);
+              expect(response.body.comments.author).to.eql(
+                expectedResult.author
+              );
               expect(response.body.comments.votes).to.eql(expectedResult.votes);
-              expect(response.body.comments.article_id).to.eql(expectedResult.article_id);
+              expect(response.body.comments.article_id).to.eql(
+                expectedResult.article_id
+              );
             });
         });
       });
