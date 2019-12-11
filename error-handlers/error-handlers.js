@@ -52,12 +52,15 @@ exports.errorCatcher = (err, req, res, next) => {
 // GET:404 - bad path to /api/users - DONE
 // GET:400 - incorrect data type to /api/users/:username - DONE
 // POST:405 - bad method to /api/users - DONE
+// POST:400 - bad request body - extra keys etc
 
 // ARTICLES
 // GET:404 - bad path to /api/articles/ - DONE
 // GET:404 - bad path to /api/articles/:article_id - DONE
 // POST:405 - bad method to /api/articles/:article_id - DONE
+// POST:400 - bad request body - extra keys etc
 
 // COMMENTS
 // GET:404 - bad path to /api/comments - DONE
 // POST:405 - bad method to /api/comments - DONE
+// POST:400 - bad request body - extra keys etc
