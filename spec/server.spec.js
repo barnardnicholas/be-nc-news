@@ -72,12 +72,15 @@ describe("SERVER", () => {
           return request(server)
             .get("/api/topics")
             .expect(200)
-            .then(topics => {
-              expect(topics.body).to.be.an("object");
-              expect(topics.body.topics).to.be.an("array");
-              expect(topics.body.topics.length).to.equal(3);
-              expect(topics.body.topics[0]).to.be.an("object");
-              expect(topics.body.topics[0]).to.have.keys("slug", "description");
+            .then(response => {
+              expect(response.body).to.be.an("object");
+              expect(response.body.topics).to.be.an("array");
+              expect(response.body.topics.length).to.equal(3);
+              expect(response.body.topics[0]).to.be.an("object");
+              expect(response.body.topics[0]).to.have.keys(
+                "slug",
+                "description"
+              );
             });
         });
       });
@@ -168,12 +171,12 @@ describe("SERVER", () => {
           return request(server)
             .get("/api/articles")
             .expect(200)
-            .then(articles => {
-              expect(articles.body).to.be.an("object");
-              expect(articles.body.articles).to.be.an("array");
-              expect(articles.body.articles.length).to.be.greaterThan(0);
-              expect(articles.body.articles[0]).to.be.an("object");
-              expect(articles.body.articles[0]).to.have.keys(
+            .then(response => {
+              expect(response.body).to.be.an("object");
+              expect(response.body.articles).to.be.an("array");
+              expect(response.body.articles.length).to.be.greaterThan(0);
+              expect(response.body.articles[0]).to.be.an("object");
+              expect(response.body.articles[0]).to.have.keys(
                 "article_id",
                 "title",
                 "body",
@@ -189,24 +192,32 @@ describe("SERVER", () => {
           return request(server)
             .get("/api/articles?sort_by=author")
             .expect(200)
-            .then(articles => {
-              expect(articles.body.articles).to.be.ascendingBy("author");
+            .then(response => {
+              expect(response.body.articles).to.be.descendingBy("author");
+            });
+        });
+        it("defaults sort_by and order with no queries passed", () => {
+          return request(server)
+            .get("/api/articles")
+            .expect(200)
+            .then(response => {
+              expect(response.body.articles).to.be.descendingBy("created_at");
             });
         });
         it("accepts queries for order", () => {
           return request(server)
-            .get("/api/articles?order=desc")
+            .get("/api/articles?order=asc")
             .expect(200)
-            .then(articles => {
-              expect(articles.body.articles).to.be.descendingBy("created_at");
+            .then(response => {
+              expect(response.body.articles).to.be.ascendingBy("created_at");
             });
         });
         it("accepts queries for author", () => {
           return request(server)
             .get("/api/articles?author=butter_bridge")
             .expect(200)
-            .then(articles => {
-              articles.body.articles.forEach(article => {
+            .then(response => {
+              response.body.articles.forEach(article => {
                 expect(article.author).to.equal("butter_bridge");
               });
             });
@@ -215,8 +226,8 @@ describe("SERVER", () => {
           return request(server)
             .get("/api/articles?topic=mitch")
             .expect(200)
-            .then(articles => {
-              articles.body.articles.forEach(article => {
+            .then(response => {
+              response.body.articles.forEach(article => {
                 expect(article.topic).to.equal("mitch");
               });
             });
@@ -224,12 +235,12 @@ describe("SERVER", () => {
         it("accepts multiple queries", () => {
           return request(server)
             .get(
-              "/api/articles?sort_by=votes&order=desc&author=butter_bridge&topic=mitch"
+              "/api/articles?sort_by=votes&order=asc&author=butter_bridge&topic=mitch"
             )
             .expect(200)
-            .then(articles => {
-              expect(articles.body.articles).to.be.descendingBy("votes");
-              articles.body.articles.forEach(article => {
+            .then(response => {
+              expect(response.body.articles).to.be.ascendingBy("votes");
+              response.body.articles.forEach(article => {
                 expect(article.author).to.equal("butter_bridge");
                 expect(article.topic).to.equal("mitch");
               });
@@ -324,23 +335,23 @@ describe("SERVER", () => {
                 wrong_key: "hello"
               })
               .expect(201)
-              .then(comment => {
-                expect(comment.body.comments).to.be.an("object");
-                expect(comment.body.comments.body).to.eql(expectedResult.body);
-                expect(comment.body.comments.article_id).to.eql(
+              .then(response => {
+                expect(response.body.comments).to.be.an("object");
+                expect(response.body.comments.body).to.eql(expectedResult.body);
+                expect(response.body.comments.article_id).to.eql(
                   expectedResult.article_id
                 );
-                expect(comment.body.comments.votes).to.eql(
+                expect(response.body.comments.votes).to.eql(
                   expectedResult.votes
                 );
-                expect(comment.body.comments.author).to.eql(
+                expect(response.body.comments.author).to.eql(
                   expectedResult.author
                 );
-                expect(comment.body.comments).to.include.keys(
+                expect(response.body.comments).to.include.keys(
                   "created_at",
                   "comment_id"
                 );
-                expect(comment.body.comments).to.not.include.keys("wrong_key");
+                expect(response.body.comments).to.not.include.keys("wrong_key");
               });
           });
         });
@@ -357,19 +368,19 @@ describe("SERVER", () => {
           .post("/api/articles/3/comments")
           .send({ username: "rogersop", body: "lovely", wrong_key: "hello" })
           .expect(201)
-          .then(comment => {
-            expect(comment.body.comments).to.be.an("object");
-            expect(comment.body.comments.body).to.eql(expectedResult.body);
-            expect(comment.body.comments.article_id).to.eql(
+          .then(response => {
+            expect(response.body.comments).to.be.an("object");
+            expect(response.body.comments.body).to.eql(expectedResult.body);
+            expect(response.body.comments.article_id).to.eql(
               expectedResult.article_id
             );
-            expect(comment.body.comments.votes).to.eql(expectedResult.votes);
-            expect(comment.body.comments.author).to.eql(expectedResult.author);
-            expect(comment.body.comments).to.include.keys(
+            expect(response.body.comments.votes).to.eql(expectedResult.votes);
+            expect(response.body.comments.author).to.eql(expectedResult.author);
+            expect(response.body.comments).to.include.keys(
               "created_at",
               "comment_id"
             );
-            expect(comment.body.comments).to.not.include.keys("wrong_key");
+            expect(response.body.comments).to.not.include.keys("wrong_key");
           });
       });
       describe("GET:200 - Get comments by article id", () => {
@@ -395,27 +406,27 @@ describe("SERVER", () => {
           return request(server)
             .get("/api/articles/1/comments")
             .expect(200)
-            .then(comments => {
-              expect(comments.body.comments).to.be.an("array");
-              expect(comments.body.comments).to.be.ascendingBy("created_at");
+            .then(response => {
+              expect(response.body.comments).to.be.an("array");
+              expect(response.body.comments).to.be.descendingBy("created_at");
             });
         });
         it("accepts sort_by queries for columns", () => {
           return request(server)
             .get("/api/articles/1/comments?sort_by=author")
             .expect(200)
-            .then(comments => {
-              expect(comments.body.comments).to.be.an("array");
-              expect(comments.body.comments).to.be.ascendingBy("author");
+            .then(response => {
+              expect(response.body.comments).to.be.an("array");
+              expect(response.body.comments).to.be.descendingBy("author");
             });
         });
         it("accepts sort_by and order queries for columns", () => {
           return request(server)
-            .get("/api/articles/1/comments?sort_by=author&order=desc")
+            .get("/api/articles/1/comments?sort_by=author&order=asc")
             .expect(200)
-            .then(comments => {
-              expect(comments.body.comments).to.be.an("array");
-              expect(comments.body.comments).to.be.descendingBy("author");
+            .then(response => {
+              expect(response.body.comments).to.be.an("array");
+              expect(response.body.comments).to.be.ascendingBy("author");
             });
         });
       });

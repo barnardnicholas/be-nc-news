@@ -2,7 +2,7 @@ const connection = require("../db/connection");
 
 const fetchAllArticles = (
   sort_by = "created_at",
-  order = "asc",
+  order = "desc",
   author,
   topic
 ) => {
@@ -74,7 +74,7 @@ const insertCommentByArticleId = (article_id, comment) => {
 const fetchCommentsByArticleId = (
   article_id,
   sort_by = "created_at",
-  order = "asc"
+  order = "desc"
 ) => {
   return connection
     .select("comment_id", "votes", "created_at", "author", "body")
