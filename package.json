@@ -15,7 +15,8 @@
     "seed:prod": "NODE_ENV=production DB_URL=$(heroku config:get DATABASE_URL) knex seed:run",
     "migrate-latest:prod": "NODE_ENV=production DB_URL=$(heroku config:get DATABASE_URL) knex migrate:latest",
     "migrate-rollback:prod": "NODE_ENV=production DB_URL=$(heroku config:get DATABASE_URL) knex migrate:rollback",
-    "start": "node ./listen.js"
+    "start": "node ./listen.js",
+    "nodemon-start": "nodemon listen.js"
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "knex": "^0.20.4",
+    "nodemon": "^2.0.1",
     "pg": "^7.14.0"
   },
   "devDependencies": {

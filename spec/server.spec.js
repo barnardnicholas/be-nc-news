@@ -130,6 +130,15 @@ describe("SERVER", () => {
               expect(response.body.msg).to.eql("Method not allowed");
             });
         });
+        it("POST:400 - invalid request body sent to /api/articles/3/comments", () => {
+          return request(server)
+            .post("/api/articles/3/comments")
+            .send({ body: "lovely" })
+            .expect(400)
+            .then(response => {
+              expect(response.body.msg).to.eql("Bad request");
+            });
+        });
       });
       describe("GET:200 - Get all articles", () => {
         it("returns 200 along with a list of articles", () => {
@@ -275,6 +284,70 @@ describe("SERVER", () => {
               );
             });
         });
+        describe("POST:201 - extra keys sent to /api/articles/3/comments", () => {
+          it("should ignore extra keys and update normally", () => {
+            const expectedResult = {
+              body: "lovely",
+              article_id: 3,
+              author: "rogersop",
+              votes: 0,
+              comment_id: 19
+            };
+            return request(server)
+              .post("/api/articles/3/comments")
+              .send({
+                username: "rogersop",
+                body: "lovely",
+                wrong_key: "hello"
+              })
+              .expect(201)
+              .then(comment => {
+                expect(comment.body.comments).to.be.an("object");
+                expect(comment.body.comments.body).to.eql(expectedResult.body);
+                expect(comment.body.comments.article_id).to.eql(
+                  expectedResult.article_id
+                );
+                expect(comment.body.comments.votes).to.eql(
+                  expectedResult.votes
+                );
+                expect(comment.body.comments.author).to.eql(
+                  expectedResult.author
+                );
+                expect(comment.body.comments).to.include.keys(
+                  "created_at",
+                  "comment_id"
+                );
+                expect(comment.body.comments).to.not.include.keys("wrong_key");
+              });
+          });
+        });
+      });
+      it("POST:201 - extra keys sent to /api/articles/3/comments", () => {
+        const expectedResult = {
+          body: "lovely",
+          article_id: 3,
+          author: "rogersop",
+          votes: 0,
+          comment_id: 19
+        };
+        return request(server)
+          .post("/api/articles/3/comments")
+          .send({ username: "rogersop", body: "lovely", wrong_key: "hello" })
+          .expect(201)
+          .then(comment => {
+            expect(comment.body.comments).to.be.an("object");
+            expect(comment.body.comments.body).to.eql(expectedResult.body);
+            expect(comment.body.comments.article_id).to.eql(
+              expectedResult.article_id
+            );
+            expect(comment.body.comments.votes).to.eql(expectedResult.votes);
+            expect(comment.body.comments.author).to.eql(expectedResult.author);
+            expect(comment.body.comments).to.include.keys(
+              "created_at",
+              "comment_id"
+            );
+            expect(comment.body.comments).to.not.include.keys("wrong_key");
+          });
       });
       describe("GET:200 - Get comments by article id", () => {
         it("returns an array of comments for a given article", () => {
@@ -342,6 +415,15 @@ describe("SERVER", () => {
               expect(response.body.msg).to.eql("Method not allowed");
             });
         });
+        it("PATCH:400 - invalid request body sent to /api/comments/3/comments", () => {
+          return request(server)
+            .patch("/api/comments/1")
+            .send({ inc_votesss: -6 })
+            .expect(400)
+            .then(response => {
+              expect(response.body.msg).to.eql("Bad request");
+            });
+        });
       });
       describe("PATCH:200 - Patch comment by ID", () => {
         it("updates the number of votes on a comment", () => {
@@ -365,6 +447,32 @@ describe("SERVER", () => {
               expect(response.body.comments.article_id).to.eql(
                 expectedResult.article_id
               );
+            });
+        });
+      });
+      describe("PATCH:200 - extra keys sent to /api/articles/3/comments", () => {
+        it("ignores extra keys in request body", () => {
+          return request(server)
+            .patch("/api/comments/1")
+            .send({ inc_votes: -6, wrong_key: "hello" })
+            .expect(200)
+            .then(response => {
+              const expectedResult = {
+                body:
+                  "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+                article_id: 9,
+                author: "butter_bridge",
+                votes: 10
+              };
+              expect(response.body.comments.body).to.eql(expectedResult.body);
+              expect(response.body.comments.author).to.eql(
+                expectedResult.author
+              );
+              expect(response.body.comments.votes).to.eql(expectedResult.votes);
+              expect(response.body.comments.article_id).to.eql(
+                expectedResult.article_id
+              );
+              expect(response.body.comments).to.not.include.keys("wrong_key");
             });
         });
       });
