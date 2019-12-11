@@ -9,13 +9,11 @@ const {
 
 server.use(express.json());
 
-server.get(
-  "/"((req, res, next) => {
-    res
-      .status(200)
-      .send({ msg: "Welcome to NB-News. GET /api for more information" });
-  })
-);
+server.get("/", (req, res, next) => {
+  res
+    .status(200)
+    .send({ msg: "Welcome to NB-News. GET /api for more information" });
+});
 
 server.use("/api", apiRouter);
 
