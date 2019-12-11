@@ -36,7 +36,7 @@ exports.sqlErrors = (err, req, res, next) => {
 exports.errorCatcher = (err, req, res, next) => {
   console.log("Reached errorCatcher error handler");
   console.log(err);
-  res.status(err.status).send({ msg: err.msg });
+  res.status(500).send({ msg: "Internal server error" });
 };
 
 // Error scenarios
