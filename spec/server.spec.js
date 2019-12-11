@@ -148,7 +148,8 @@ describe("SERVER", () => {
                 "votes",
                 "author",
                 "created_at",
-                "topic"
+                "topic",
+                "comment_count"
               );
             });
         });
@@ -291,7 +292,6 @@ describe("SERVER", () => {
               );
               comments.body.comments.forEach(comment => {
                 expect(comment).to.be.an("object");
-                expect(comment.article_id).to.equal(1);
               });
             });
         });
@@ -315,11 +315,11 @@ describe("SERVER", () => {
         });
         it("accepts sort_by and order queries for columns", () => {
           return request(server)
-            .get("/api/articles/1/comments?sort_by=article_id&order=desc")
+            .get("/api/articles/1/comments?sort_by=author&order=desc")
             .expect(200)
             .then(comments => {
               expect(comments.body.comments).to.be.an("array");
-              expect(comments.body.comments).to.be.descendingBy("article_id");
+              expect(comments.body.comments).to.be.descendingBy("author");
             });
         });
       });

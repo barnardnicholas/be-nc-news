@@ -6,21 +6,25 @@ const fetchAllArticles = (
   author,
   topic
 ) => {
-  return connection("articles")
-    .select("*")
+  return connection
+    .select("articles.*")
+    .from("articles")
+    .leftJoin("comments", "comments.article_id", "=", "articles.article_id")
+    .count({ comment_count: "comment_id" })
+    .groupBy("articles.article_id")
     .orderBy(sort_by, order)
     .modify(query => {
       if (author !== undefined) {
-        return query.where("author", "=", author);
+        return query.where("articles.author", "=", author);
       }
     })
     .modify(query => {
       if (topic !== undefined) {
-        return query.where("topic", "=", topic);
+        return query.where("articles.topic", "=", topic);
       }
     })
-    .then(article => {
-      return { articles: article };
+    .then(articles => {
+      return { articles: articles };
     });
 };
 
@@ -72,7 +76,9 @@ const fetchCommentsByArticleId = (
   sort_by = "created_at",
   order = "asc"
 ) => {
-  return connection("comments")
+  return connection
+    .select("comment_id", "votes", "created_at", "author", "body")
+    .from("comments")
     .where("article_id", "=", article_id)
     .orderBy(sort_by, order)
     .then(comments => {
