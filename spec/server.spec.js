@@ -184,9 +184,33 @@ describe("SERVER", () => {
         it("GET:404 - invalid query sent to /api/articles?sort_by=not-a-column", () => {
           return request(server)
             .get("/api/articles?sort_by=not-a-column")
+            .expect(400)
+            .then(response => {
+              expect(response.body.msg).to.eql("Bad request");
+            });
+        });
+        it("GET:404 - non-existent article ID passed to /api/articles/1000/comments", () => {
+          return request(server)
+            .get("/api/articles/1000/comments")
             .expect(404)
             .then(response => {
               expect(response.body.msg).to.eql("Not found");
+            });
+        });
+        it("GET:400 - bad article ID passed to /api/articles/1000/comments", () => {
+          return request(server)
+            .get("/api/articles/not-an-article/comments")
+            .expect(400)
+            .then(response => {
+              expect(response.body.msg).to.eql("Bad request");
+            });
+        });
+        it("GET:400 - bad sort_by value passed to /api/articles/1000/comments", () => {
+          return request(server)
+            .get("/api/articles/1/comments?sort_by=not-a-column")
+            .expect(400)
+            .then(response => {
+              expect(response.body.msg).to.eql("Bad request");
             });
         });
       });
@@ -308,8 +332,8 @@ describe("SERVER", () => {
                 created_at: "2018-11-15T12:21:54.171+00:00",
                 topic: "mitch"
               };
-              expect(response.body.articles).to.be.an("object");
-              expect(response.body.articles).to.eql(expectedResult);
+              expect(response.body.article).to.be.an("object");
+              expect(response.body.article).to.eql(expectedResult);
             });
         });
       });
@@ -380,32 +404,36 @@ describe("SERVER", () => {
           });
         });
       });
-      it("POST:201 - extra keys sent to /api/articles/3/comments", () => {
-        const expectedResult = {
-          body: "lovely",
-          article_id: 3,
-          author: "rogersop",
-          votes: 0,
-          comment_id: 19
-        };
-        return request(server)
-          .post("/api/articles/3/comments")
-          .send({ username: "rogersop", body: "lovely", wrong_key: "hello" })
-          .expect(201)
-          .then(response => {
-            expect(response.body.comments).to.be.an("object");
-            expect(response.body.comments.body).to.eql(expectedResult.body);
-            expect(response.body.comments.article_id).to.eql(
-              expectedResult.article_id
-            );
-            expect(response.body.comments.votes).to.eql(expectedResult.votes);
-            expect(response.body.comments.author).to.eql(expectedResult.author);
-            expect(response.body.comments).to.include.keys(
-              "created_at",
-              "comment_id"
-            );
-            expect(response.body.comments).to.not.include.keys("wrong_key");
-          });
+      describe("POST:201 - extra keys sent to /api/articles/3/comments", () => {
+        it("should ignore extra keys", () => {
+          const expectedResult = {
+            body: "lovely",
+            article_id: 3,
+            author: "rogersop",
+            votes: 0,
+            comment_id: 19
+          };
+          return request(server)
+            .post("/api/articles/3/comments")
+            .send({ username: "rogersop", body: "lovely", wrong_key: "hello" })
+            .expect(201)
+            .then(response => {
+              expect(response.body.comments).to.be.an("object");
+              expect(response.body.comments.body).to.eql(expectedResult.body);
+              expect(response.body.comments.article_id).to.eql(
+                expectedResult.article_id
+              );
+              expect(response.body.comments.votes).to.eql(expectedResult.votes);
+              expect(response.body.comments.author).to.eql(
+                expectedResult.author
+              );
+              expect(response.body.comments).to.include.keys(
+                "created_at",
+                "comment_id"
+              );
+              expect(response.body.comments).to.not.include.keys("wrong_key");
+            });
+        });
       });
       describe("GET:200 - Get comments by article id", () => {
         it("returns an array of comments for a given article", () => {

@@ -86,6 +86,9 @@ const fetchCommentsByArticleId = (
     .where("article_id", "=", article_id)
     .orderBy(sort_by, order)
     .then(comments => {
+      if (comments.length === 0) {
+        return Promise.reject({ status: 404, msg: "Not found" });
+      }
       return { comments: comments };
     });
 };
