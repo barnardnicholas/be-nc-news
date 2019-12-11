@@ -8,6 +8,7 @@ exports.routeNotFound = (req, res, next) => {
 };
 exports.sqlErrors = (req, res, next) => {
   console.log("Reached sqlErrors error handler");
+  // 22P02 invalid syntax for column type
 };
 exports.errorCatcher = (err, req, res, next) => {
   console.log("Reached errorCatcher error handler");
