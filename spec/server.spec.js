@@ -186,7 +186,8 @@ describe("SERVER", () => {
                 votes: 100,
                 author: "butter_bridge",
                 created_at: "2018-11-15T12:21:54.171+00:00",
-                topic: "mitch"
+                topic: "mitch",
+                comment_count: "13"
               };
               expect(article.body.article).to.be.an("object");
               expect(article.body.article).eql(expectedResult);

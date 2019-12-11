@@ -21,10 +21,13 @@ const fetchAllArticles = (sort_by = "created_at", order = "asc", author, topic) 
 };
 
 const fetchArticleById = article_id => {
-  return connection("articles")
-    .select("*")
-    .where("article_id", "=", article_id)
-    .returning("*")
+  return connection
+    .select("articles.*")
+    .from("articles")
+    .leftJoin("comments", "comments.article_id", "=", "articles.article_id")
+    .count({ comment_count: "comment_id" })
+    .where("articles.article_id", "=", article_id)
+    .groupBy("articles.article_id")
     .then(article => {
       return { article: article[0] };
     });
