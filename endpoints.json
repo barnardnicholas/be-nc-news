@@ -3,10 +3,90 @@
     "description": "serves up a json representation of all the available endpoints of the api"
   },
   "GET /api/topics": {
-    "description": "serves an array of all topics",
+    "description": "Serves an array of all topics",
     "queries": [],
     "exampleResponse": {
       "topics": [{ "slug": "football", "description": "Footie!" }]
+    }
+  },
+  "GET /api/users/:username": {
+    "description": "Serves details for a single user, based on a provided username",
+    "queries": [],
+    "exampleResponse": {
+      "users": {
+        "username": "example_user",
+        "avatar_url": "https://www.a-website.com/avatar.jpg",
+        "name": "John Smith"
+      }
+    }
+  },
+  "GET /api/articles/:article_id": {
+    "description": "Serves a single article, based on a provided article ID number",
+    "queries": [],
+    "exampleResponse": {
+      "article": {
+        "article_id": 1,
+        "title": "Why Star Wars is amazing",
+        "body": "It just is.",
+        "votes": 100,
+        "author": "george_lucas",
+        "created_at": "2018-11-15T12:21:54.171+00:00",
+        "topic": "star_wars",
+        "comment_count": "13"
+      }
+    }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "Updates the number of votes on an article, based on data passed in your request",
+    "queries": [],
+    "exampleRequest": {
+      "inc_votes": 1
+    },
+    "exampleResponse": {
+      "articles": {
+        "article": {
+          "article_id": 1,
+          "title": "Why Star Wars is amazing",
+          "body": "It just is.",
+          "votes": 101,
+          "author": "george_lucas",
+          "created_at": "2018-11-15T12:21:54.171+00:00",
+          "topic": "star_wars"
+        }
+      }
+    }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "Posts a comment on an article, based on data passed in your request, and returns the comment",
+    "queries": [],
+    "exampleRequest": {
+      "username": "john_smith",
+      "body": "I agree whole-heartedly!"
+    },
+    "exampleResponse": {
+      "comments": {
+        "comment_id": 19,
+        "author": "john_smith",
+        "article_id": 1,
+        "votes": 0,
+        "created_at": "2019-12-11T16:00:21.306+00:00",
+        "body": "I agree whole-heartedly!"
+      }
+    }
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "Serves an array of comments for a given article",
+    "queries": [],
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 18,
+          "votes": 16,
+          "created_at": "2000-11-26T12:36:03.389+00:00",
+          "author": "john_smith",
+          "body": "I watched Star Wars every morning for 15 years."
+        }
+      ]
     }
   },
   "GET /api/articles": {
@@ -23,5 +103,25 @@
         }
       ]
     }
+  },
+  "PATCH /api/comments/:comment_id": {
+    "description": "Updates the number of votes on a comment, based on data passed in your request",
+    "queries": [],
+    "exampleRequest": {
+      "inc_votes": 1
+    },
+    "exampleResponse": {
+      "comments": {
+        "comment_id": 18,
+        "votes": 16,
+        "article_id": 5,
+        "created_at": "2000-11-26T12:36:03.389+00:00",
+        "author": "john_smith",
+        "body": "I watched Star Wars every morning for 15 years."
+      }
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "Deletes a comment based on comment ID number. Returns 204 and no body."
   }
 }

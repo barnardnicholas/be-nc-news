@@ -24,6 +24,29 @@ describe("SERVER", () => {
           });
       });
     });
+    describe("GET:200 - get all API data", () => {
+      it("returns the API data when requested", () => {
+        return request(server)
+          .get("/api")
+          .expect(200)
+          .then(response => {
+            expect(response.body).to.be.an("object");
+            expect(response.body).to.include.keys("API");
+            expect(response.body.API).to.include.keys(
+              "GET /api",
+              "GET /api/topics",
+              "GET /api/users/:username",
+              "GET /api/articles/:article_id",
+              "PATCH /api/articles/:article_id",
+              "GET /api/articles/:article_id/comments",
+              "POST /api/articles/:article_id/comments",
+              "PATCH /api/comments/:comment_id",
+              "DELETE /api/comments/:comment_id",
+              "GET /api/articles"
+            );
+          });
+      });
+    });
     describe("/topics", () => {
       describe("ERRORS", () => {
         it("GET:404 - bad path to /api/topics", () => {
@@ -91,15 +114,15 @@ describe("SERVER", () => {
           return request(server)
             .get("/api/users/butter_bridge")
             .expect(200)
-            .then(user => {
+            .then(response => {
               const expectedResult = {
                 username: "butter_bridge",
                 name: "jonny",
                 avatar_url:
                   "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
               };
-              expect(user.body.users).to.be.an("object");
-              expect(user.body.users).eql(expectedResult);
+              expect(response.body.users).to.be.an("object");
+              expect(response.body.users).eql(expectedResult);
             });
         });
       });
@@ -218,7 +241,7 @@ describe("SERVER", () => {
           return request(server)
             .get("/api/articles/1")
             .expect(200)
-            .then(article => {
+            .then(response => {
               const expectedResult = {
                 article_id: 1,
                 title: "Living in the shadow of a great man",
@@ -229,8 +252,8 @@ describe("SERVER", () => {
                 topic: "mitch",
                 comment_count: "13"
               };
-              expect(article.body.article).to.be.an("object");
-              expect(article.body.article).eql(expectedResult);
+              expect(response.body.article).to.be.an("object");
+              expect(response.body.article).eql(expectedResult);
             });
         });
       });
@@ -268,17 +291,17 @@ describe("SERVER", () => {
             .post("/api/articles/3/comments")
             .send({ username: "rogersop", body: "lovely" })
             .expect(201)
-            .then(comment => {
-              expect(comment.body.comments).to.be.an("object");
-              expect(comment.body.comments.body).to.eql(expectedResult.body);
-              expect(comment.body.comments.article_id).to.eql(
+            .then(response => {
+              expect(response.body.comments).to.be.an("object");
+              expect(response.body.comments.body).to.eql(expectedResult.body);
+              expect(response.body.comments.article_id).to.eql(
                 expectedResult.article_id
               );
-              expect(comment.body.comments.votes).to.eql(expectedResult.votes);
-              expect(comment.body.comments.author).to.eql(
+              expect(response.body.comments.votes).to.eql(expectedResult.votes);
+              expect(response.body.comments.author).to.eql(
                 expectedResult.author
               );
-              expect(comment.body.comments).to.include.keys(
+              expect(response.body.comments).to.include.keys(
                 "created_at",
                 "comment_id"
               );
@@ -354,16 +377,16 @@ describe("SERVER", () => {
           return request(server)
             .get("/api/articles/1/comments")
             .expect(200)
-            .then(comments => {
-              expect(comments.body.comments).to.be.an("array");
-              expect(comments.body.comments[0]).to.include.keys(
+            .then(response => {
+              expect(response.body.comments).to.be.an("array");
+              expect(response.body.comments[0]).to.include.keys(
                 "comment_id",
                 "votes",
                 "created_at",
                 "author",
                 "body"
               );
-              comments.body.comments.forEach(comment => {
+              response.body.comments.forEach(comment => {
                 expect(comment).to.be.an("object");
               });
             });
