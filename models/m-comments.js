@@ -11,11 +11,10 @@ const updateCommentById = (comment_id, votes) => {
     })
     .returning("*")
     .then(updatedComment => {
-      if (inc_votes !== undefined) {
-        return { comments: updatedComment[0] };
-      } else {
-        return Promise.reject({ status: 400, msg: "Bad request" });
+      if (updatedComment.length === 0) {
+        return Promise.reject({ status: 404, msg: "Not found" });
       }
+      return { comments: updatedComment[0] };
     });
 };
 
@@ -23,7 +22,11 @@ const removeCommentById = comment_id => {
   return connection("comments")
     .where("comment_id", "=", comment_id)
     .del()
-    .then(() => {
+    .then(response => {
+      console.log(response);
+      if (response === 0) {
+        return Promise.reject({ status: 404, msg: "Not found" });
+      }
       console.log("Comment deleted");
     });
 };

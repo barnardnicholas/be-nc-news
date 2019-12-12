@@ -49,9 +49,14 @@ const fetchArticleById = article_id => {
 };
 
 const updateArticleById = (article_id, votes = 0) => {
+  const { inc_votes } = votes;
   return connection("articles")
     .where("article_id", "=", article_id)
-    .increment("votes", votes.inc_votes)
+    .modify(query => {
+      if (inc_votes !== undefined) {
+        return query.increment("votes", votes.inc_votes);
+      }
+    })
     .returning("*")
     .then(updatedArticle => {
       return { article: updatedArticle[0] };
@@ -71,7 +76,7 @@ const insertCommentByArticleId = (article_id, comment) => {
     .insert(completeComment)
     .returning("*")
     .then(postedComment => {
-      return { comments: postedComment[0] };
+      return { comment: postedComment[0] };
     });
 };
 

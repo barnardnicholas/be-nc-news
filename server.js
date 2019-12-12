@@ -1,6 +1,6 @@
 const express = require("express");
 const server = express();
-const apiRouter = require("./router/r-api");
+const mainRouter = require("./router/r-server");
 const {
   handlingErrors,
   sqlErrors,
@@ -15,7 +15,7 @@ server.get("/", (req, res, next) => {
     .send({ msg: "Welcome to NB-News. GET /api for more information" });
 });
 
-server.use("/api", apiRouter);
+server.use("/api", mainRouter);
 
 server.use(handlingErrors);
 

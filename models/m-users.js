@@ -8,7 +8,10 @@ const fetchUserById = username => {
     .select("*")
     .where("username", "=", username)
     .then(user => {
-      return { users: user[0] };
+      if (user.length === 0) {
+        return Promise.reject({ status: 404, msg: "Not found" });
+      }
+      return { user: user[0] };
     });
 };
 

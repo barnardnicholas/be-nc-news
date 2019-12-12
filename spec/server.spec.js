@@ -15,13 +15,18 @@ describe("SERVER", () => {
   });
   describe("/api", () => {
     describe("ERRORS", () => {
-      it("GET:404 - path path to /api", () => {
+      it("GET:404 - bad path to /api", () => {
         return request(server)
           .get("/api/badpath")
           .expect(404)
           .then(response => {
             expect(response.body.msg).to.eql("Not found");
           });
+      });
+      it("DELETE:405 - returns 405 on invalid method request", () => {
+        return request(server)
+          .delete("/api")
+          .expect(405);
       });
     });
     describe("GET:200 - get all API data", () => {
@@ -103,6 +108,14 @@ describe("SERVER", () => {
               expect(response.body.msg).to.eql("Bad request");
             });
         });
+        it("GET:404 - throws 404 when sent a get request to invalid user ID", () => {
+          return request(server)
+            .get("/api/users/not-a-username")
+            .expect(404)
+            .then(response => {
+              expect(response.body.msg).to.eql("Not found");
+            });
+        });
         it("POST:405 - bad method to /api/users", () => {
           return request(server)
             .post("/api/users/1")
@@ -124,8 +137,8 @@ describe("SERVER", () => {
                 avatar_url:
                   "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
               };
-              expect(response.body.users).to.be.an("object");
-              expect(response.body.users).eql(expectedResult);
+              expect(response.body.user).to.be.an("object");
+              expect(response.body.user).eql(expectedResult);
             });
         });
       });
@@ -163,6 +176,53 @@ describe("SERVER", () => {
             .expect(400)
             .then(response => {
               expect(response.body.msg).to.eql("Bad request");
+            });
+        });
+        it("PATCH:200 - returns the unchanged article when sent an empty patch request", () => {
+          return request(server)
+            .patch("/api/articles/1")
+            .send({})
+            .expect(200)
+            .then(response => {
+              const expectedResult = {
+                article_id: 1,
+                title: "Living in the shadow of a great man",
+                body: "I find this existence challenging",
+                votes: 100,
+                author: "butter_bridge",
+                created_at: "2018-11-15T12:21:54.171+00:00",
+                topic: "mitch"
+              };
+              expect(response.body.article).to.be.an("object");
+              expect(response.body.article).to.eql(expectedResult);
+            });
+        });
+        it("PATCH:400 - returns 400 when sent an invalid patch request", () => {
+          return request(server)
+            .patch("/api/articles/1")
+            .send({ inc_votes: "hello" })
+            .expect(400)
+            .then(response => {
+              expect(response.body.msg).to.eql("Bad request");
+            });
+        });
+        it("PATCH:400 - invalid request body sent to /api/articles/1", () => {
+          return request(server)
+            .patch("/api/articles/1")
+            .send({ inc_votesss: -6 })
+            .expect(200)
+            .then(response => {
+              const expectedResult = {
+                article_id: 1,
+                title: "Living in the shadow of a great man",
+                body: "I find this existence challenging",
+                votes: 100,
+                author: "butter_bridge",
+                created_at: "2018-11-15T12:21:54.171+00:00",
+                topic: "mitch"
+              };
+              expect(response.body.article).to.be.an("object");
+              expect(response.body.article).to.eql(expectedResult);
             });
         });
         it("GET:404 - invalid query sent to /api/articles?author=nobody", () => {
@@ -205,12 +265,21 @@ describe("SERVER", () => {
               expect(response.body.msg).to.eql("Bad request");
             });
         });
-        it("GET:400 - bad sort_by value passed to /api/articles/1000/comments", () => {
+        it("GET:400 - bad sort_by value passed to /api/articles/1/comments", () => {
           return request(server)
             .get("/api/articles/1/comments?sort_by=not-a-column")
             .expect(400)
             .then(response => {
               expect(response.body.msg).to.eql("Bad request");
+            });
+        });
+        it("throws an error when posting to valid but non-existent article ID", () => {
+          return request(server)
+            .post("/api/articles/30000/comments")
+            .send({ username: "rogersop", body: "lovely" })
+            .expect(404)
+            .then(response => {
+              expect(response.body.msg).to.equal("Not found");
             });
         });
       });
@@ -351,16 +420,16 @@ describe("SERVER", () => {
             .send({ username: "rogersop", body: "lovely" })
             .expect(201)
             .then(response => {
-              expect(response.body.comments).to.be.an("object");
-              expect(response.body.comments.body).to.eql(expectedResult.body);
-              expect(response.body.comments.article_id).to.eql(
+              expect(response.body.comment).to.be.an("object");
+              expect(response.body.comment.body).to.eql(expectedResult.body);
+              expect(response.body.comment.article_id).to.eql(
                 expectedResult.article_id
               );
-              expect(response.body.comments.votes).to.eql(expectedResult.votes);
-              expect(response.body.comments.author).to.eql(
+              expect(response.body.comment.votes).to.eql(expectedResult.votes);
+              expect(response.body.comment.author).to.eql(
                 expectedResult.author
               );
-              expect(response.body.comments).to.include.keys(
+              expect(response.body.comment).to.include.keys(
                 "created_at",
                 "comment_id"
               );
@@ -384,22 +453,22 @@ describe("SERVER", () => {
               })
               .expect(201)
               .then(response => {
-                expect(response.body.comments).to.be.an("object");
-                expect(response.body.comments.body).to.eql(expectedResult.body);
-                expect(response.body.comments.article_id).to.eql(
+                expect(response.body.comment).to.be.an("object");
+                expect(response.body.comment.body).to.eql(expectedResult.body);
+                expect(response.body.comment.article_id).to.eql(
                   expectedResult.article_id
                 );
-                expect(response.body.comments.votes).to.eql(
+                expect(response.body.comment.votes).to.eql(
                   expectedResult.votes
                 );
-                expect(response.body.comments.author).to.eql(
+                expect(response.body.comment.author).to.eql(
                   expectedResult.author
                 );
-                expect(response.body.comments).to.include.keys(
+                expect(response.body.comment).to.include.keys(
                   "created_at",
                   "comment_id"
                 );
-                expect(response.body.comments).to.not.include.keys("wrong_key");
+                expect(response.body.comment).to.not.include.keys("wrong_key");
               });
           });
         });
@@ -418,20 +487,20 @@ describe("SERVER", () => {
             .send({ username: "rogersop", body: "lovely", wrong_key: "hello" })
             .expect(201)
             .then(response => {
-              expect(response.body.comments).to.be.an("object");
-              expect(response.body.comments.body).to.eql(expectedResult.body);
-              expect(response.body.comments.article_id).to.eql(
+              expect(response.body.comment).to.be.an("object");
+              expect(response.body.comment.body).to.eql(expectedResult.body);
+              expect(response.body.comment.article_id).to.eql(
                 expectedResult.article_id
               );
-              expect(response.body.comments.votes).to.eql(expectedResult.votes);
-              expect(response.body.comments.author).to.eql(
+              expect(response.body.comment.votes).to.eql(expectedResult.votes);
+              expect(response.body.comment.author).to.eql(
                 expectedResult.author
               );
-              expect(response.body.comments).to.include.keys(
+              expect(response.body.comment).to.include.keys(
                 "created_at",
                 "comment_id"
               );
-              expect(response.body.comments).to.not.include.keys("wrong_key");
+              expect(response.body.comment).to.not.include.keys("wrong_key");
             });
         });
       });
@@ -501,13 +570,70 @@ describe("SERVER", () => {
               expect(response.body.msg).to.eql("Method not allowed");
             });
         });
-        it("PATCH:400 - invalid request body sent to /api/comments/3/comments", () => {
+        it("PATCH:200 - returns unchanged comment when invalid request body sent to /api/comments/1", () => {
           return request(server)
             .patch("/api/comments/1")
             .send({ inc_votesss: -6 })
+            .expect(200)
+            .then(response => {
+              const expectedResult = {
+                body:
+                  "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+                article_id: 9,
+                author: "butter_bridge",
+                votes: 16
+              };
+              expect(response.body.comments.body).to.eql(expectedResult.body);
+              expect(response.body.comments.author).to.eql(
+                expectedResult.author
+              );
+              expect(response.body.comments.votes).to.eql(expectedResult.votes);
+              expect(response.body.comments.article_id).to.eql(
+                expectedResult.article_id
+              );
+            });
+        });
+        it("PATCH:400 - returns 400 when sent an invalid patch request", () => {
+          return request(server)
+            .patch("/api/comments/1")
+            .send({ inc_votes: "hello" })
             .expect(400)
             .then(response => {
               expect(response.body.msg).to.eql("Bad request");
+            });
+        });
+        it("PATCH:400 - returns 400 when sent a valid patch request to an invalid comment ID", () => {
+          return request(server)
+            .patch("/api/comments/not-a-comment")
+            .send({ inc_votes: 1 })
+            .expect(400)
+            .then(response => {
+              expect(response.body.msg).to.eql("Bad request");
+            });
+        });
+        it("PATCH:404 - returns 404 when sent a patch request to a valid comment ID which doesn't exist", () => {
+          return request(server)
+            .patch("/api/comments/100000")
+            .send({ inc_votes: 2 })
+            .expect(404)
+            .then(response => {
+              expect(response.body.msg).to.eql("Not found");
+            });
+        });
+        it("DELETE:404 throws 404 when sent a delete request to a valid but non-existent comment ID", () => {
+          return request(server)
+            .delete("/api/comments/100000")
+            .expect(404)
+            .then(response => {
+              expect(response.body.msg).to.equal("Not found");
+            });
+        });
+        it("DELETE:400 throws 400 when sent a delete request to an invalid comment ID", () => {
+          return request(server)
+            .delete("/api/comments/not-a-comment")
+            .expect(400)
+            .then(response => {
+              expect(response.body.msg).to.equal("Bad request");
             });
         });
       });
