@@ -1,3 +1,5 @@
+const connection = require("../connection");
+
 exports.formatDates = list => {
   return list.map(article => {
     const { created_at, ...keys } = article;
@@ -28,4 +30,44 @@ exports.formatComments = (comments, articleRef) => {
       ...keys
     };
   });
+};
+
+exports.checkAuthorExists = author => {
+  return connection
+    .select("*")
+    .from("users")
+    .where("username", "=", author)
+    .then(authors => {
+      if (authors.length === 0) {
+        return Promise.reject({ status: 404, msg: "Not found" });
+      } else return { articles: [] };
+    });
+};
+
+exports.checkTopicExists = topic => {
+  return connection
+    .select("*")
+    .from("topics")
+    .where("slug", "=", topic)
+    .then(topics => {
+      if (topics.length === 0) {
+        return Promise.reject({ status: 404, msg: "Not found" });
+      } else {
+        return { articles: [] };
+      }
+    });
+};
+
+exports.checkArticleExists = article_id => {
+  return connection
+    .select("*")
+    .from("articles")
+    .where("article_id", "=", article_id)
+    .then(articles => {
+      if (articles.length === 0) {
+        return Promise.reject({ status: 404, msg: "Not found" });
+      } else {
+        return { comments: [] };
+      }
+    });
 };

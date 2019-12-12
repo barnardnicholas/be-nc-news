@@ -1,4 +1,9 @@
 const connection = require("../db/connection");
+const {
+  checkAuthorExists,
+  checkTopicExists,
+  checkArticleExists
+} = require("../db/utils/utils");
 
 const fetchAllArticles = (
   sort_by = "created_at",
@@ -24,8 +29,10 @@ const fetchAllArticles = (
       }
     })
     .then(articles => {
-      if (articles.length === 0) {
-        return Promise.reject({ status: 404, msg: "Not found" });
+      if (articles.length === 0 && topic !== undefined) {
+        return checkTopicExists(topic);
+      } else if (articles.length === 0 && author !== undefined) {
+        return checkAuthorExists(author);
       } else {
         return { articles: articles };
       }
@@ -92,7 +99,7 @@ const fetchCommentsByArticleId = (
     .orderBy(sort_by, order)
     .then(comments => {
       if (comments.length === 0) {
-        return Promise.reject({ status: 404, msg: "Not found" });
+        return checkArticleExists(article_id);
       }
       return { comments: comments };
     });

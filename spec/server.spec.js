@@ -62,6 +62,14 @@ describe("SERVER", () => {
               expect(response.body.msg).to.eql("Not found");
             });
         });
+        it("GET:200 - request made to valid topic with no articles attached", () => {
+          return request(server)
+            .get("/api/topics/paper")
+            .expect(404)
+            .then(response => {
+              expect(response.body.msg).to.eql("Not found");
+            });
+        });
         it("POST:405 - bad method to /api/topics", () => {
           return request(server)
             .post("/api/topics")
@@ -257,6 +265,14 @@ describe("SERVER", () => {
               expect(response.body.msg).to.eql("Not found");
             });
         });
+        it("GET:404 - invalid query sent to /api/articles?author=nobody", () => {
+          return request(server)
+            .get("/api/articles?author=nobody")
+            .expect(404)
+            .then(response => {
+              expect(response.body.msg).to.eql("Not found");
+            });
+        });
         it("GET:400 - bad article ID passed to /api/articles/1000/comments", () => {
           return request(server)
             .get("/api/articles/not-an-article/comments")
@@ -347,6 +363,22 @@ describe("SERVER", () => {
               response.body.articles.forEach(article => {
                 expect(article.topic).to.equal("mitch");
               });
+            });
+        });
+        it("returns 200 and empty array when passed a topic query which has no articles", () => {
+          return request(server)
+            .get("/api/articles?topic=paper")
+            .expect(200)
+            .then(response => {
+              expect(response.body.articles).to.have.lengthOf(0);
+            });
+        });
+        it("returns 200 and empty array when passed an author query which has no articles", () => {
+          return request(server)
+            .get("/api/articles?author=lurker")
+            .expect(200)
+            .then(response => {
+              expect(response.body.articles).to.have.lengthOf(0);
             });
         });
         it("accepts multiple queries", () => {
@@ -550,6 +582,15 @@ describe("SERVER", () => {
               expect(response.body.comments).to.be.ascendingBy("author");
             });
         });
+        it("returns an empty array when passed an article with no comments", () => {
+          return request(server)
+            .get("/api/articles/2/comments")
+            .expect(200)
+            .then(response => {
+              expect(response.body.comments).to.be.an("array");
+              expect(response.body.comments).to.have.lengthOf(0);
+            });
+        });
       });
     });
     describe("/comments", () => {
@@ -583,12 +624,12 @@ describe("SERVER", () => {
                 author: "butter_bridge",
                 votes: 16
               };
-              expect(response.body.comments.body).to.eql(expectedResult.body);
-              expect(response.body.comments.author).to.eql(
+              expect(response.body.comment.body).to.eql(expectedResult.body);
+              expect(response.body.comment.author).to.eql(
                 expectedResult.author
               );
-              expect(response.body.comments.votes).to.eql(expectedResult.votes);
-              expect(response.body.comments.article_id).to.eql(
+              expect(response.body.comment.votes).to.eql(expectedResult.votes);
+              expect(response.body.comment.article_id).to.eql(
                 expectedResult.article_id
               );
             });
@@ -651,12 +692,12 @@ describe("SERVER", () => {
                 author: "butter_bridge",
                 votes: 10
               };
-              expect(response.body.comments.body).to.eql(expectedResult.body);
-              expect(response.body.comments.author).to.eql(
+              expect(response.body.comment.body).to.eql(expectedResult.body);
+              expect(response.body.comment.author).to.eql(
                 expectedResult.author
               );
-              expect(response.body.comments.votes).to.eql(expectedResult.votes);
-              expect(response.body.comments.article_id).to.eql(
+              expect(response.body.comment.votes).to.eql(expectedResult.votes);
+              expect(response.body.comment.article_id).to.eql(
                 expectedResult.article_id
               );
             });
@@ -676,15 +717,15 @@ describe("SERVER", () => {
                 author: "butter_bridge",
                 votes: 10
               };
-              expect(response.body.comments.body).to.eql(expectedResult.body);
-              expect(response.body.comments.author).to.eql(
+              expect(response.body.comment.body).to.eql(expectedResult.body);
+              expect(response.body.comment.author).to.eql(
                 expectedResult.author
               );
-              expect(response.body.comments.votes).to.eql(expectedResult.votes);
-              expect(response.body.comments.article_id).to.eql(
+              expect(response.body.comment.votes).to.eql(expectedResult.votes);
+              expect(response.body.comment.article_id).to.eql(
                 expectedResult.article_id
               );
-              expect(response.body.comments).to.not.include.keys("wrong_key");
+              expect(response.body.comment).to.not.include.keys("wrong_key");
             });
         });
       });

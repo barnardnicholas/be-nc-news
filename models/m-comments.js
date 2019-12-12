@@ -14,7 +14,7 @@ const updateCommentById = (comment_id, votes) => {
       if (updatedComment.length === 0) {
         return Promise.reject({ status: 404, msg: "Not found" });
       }
-      return { comments: updatedComment[0] };
+      return { comment: updatedComment[0] };
     });
 };
 
@@ -23,7 +23,6 @@ const removeCommentById = comment_id => {
     .where("comment_id", "=", comment_id)
     .del()
     .then(response => {
-      console.log(response);
       if (response === 0) {
         return Promise.reject({ status: 404, msg: "Not found" });
       }

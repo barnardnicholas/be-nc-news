@@ -22,9 +22,7 @@ exports.handlingErrors = (err, req, res, next) => {
   } else next(err);
 };
 exports.sqlErrors = (err, req, res, next) => {
-  console.log(
-    `Reached sqlErrors error handler - error code ${err.code} - ${err.detail}`
-  );
+  console.log("Reached sqlErrors error handler");
   const errorCodes = {
     "42703": [400, "Bad request"],
     "23502": [400, "Bad request"],
