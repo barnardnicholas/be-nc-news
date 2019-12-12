@@ -14,8 +14,8 @@ describe("SERVER", () => {
     return connection.destroy();
   });
   describe("/api", () => {
-    describe("ERRORS", () => {
-      it("GET:404 - bad path to /api", () => {
+    describe("API ERRORS", () => {
+      it("GET:404 - returns 404 on bad path request", () => {
         return request(server)
           .get("/api/badpath")
           .expect(404)
@@ -53,8 +53,8 @@ describe("SERVER", () => {
       });
     });
     describe("/topics", () => {
-      describe("ERRORS", () => {
-        it("GET:404 - bad path to /api/topics", () => {
+      describe("TOPICS ERRORS", () => {
+        it("GET:404 - returns 404 on request to bad path", () => {
           return request(server)
             .get("/api/topics/wrong")
             .expect(404)
@@ -62,15 +62,7 @@ describe("SERVER", () => {
               expect(response.body.msg).to.eql("Not found");
             });
         });
-        it("GET:200 - request made to valid topic with no articles attached", () => {
-          return request(server)
-            .get("/api/topics/paper")
-            .expect(404)
-            .then(response => {
-              expect(response.body.msg).to.eql("Not found");
-            });
-        });
-        it("POST:405 - bad method to /api/topics", () => {
+        it("POST:405 - returns 405 on bad method to /api/topics", () => {
           return request(server)
             .post("/api/topics")
             .expect(405)
@@ -80,7 +72,7 @@ describe("SERVER", () => {
         });
         it("", () => {});
       });
-      describe("GET:200 - Get all topics", () => {
+      describe("GET:200 - Get all Topics", () => {
         it("returns 200 along with a list of topics", () => {
           return request(server)
             .get("/api/topics")
@@ -99,8 +91,8 @@ describe("SERVER", () => {
       });
     });
     describe("/users", () => {
-      describe("ERRORS", () => {
-        it("GET:404 - bad path to /api/users", () => {
+      describe("USERS ERRORS", () => {
+        it("GET:404 - throws 404 on bad path to /api/users", () => {
           return request(server)
             .get("/api/uses")
             .expect(404)
@@ -108,7 +100,7 @@ describe("SERVER", () => {
               expect(response.body.msg).to.eql("Not found");
             });
         });
-        it("GET:400 - incorrect data type to /api/users/:username", () => {
+        it("GET:400 - throws 400 on incorrect data type to /api/users/:username", () => {
           return request(server)
             .get("/api/users/6")
             .expect(400)
@@ -124,7 +116,7 @@ describe("SERVER", () => {
               expect(response.body.msg).to.eql("Not found");
             });
         });
-        it("POST:405 - bad method to /api/users", () => {
+        it("POST:405 - throws 405 on https://eshop.macsales.com/Service/Knowledgebase/Article/26/725/Mac-High-Sierra--Unformatted-Disks-Not-Visible-Disk-Utilitybad method to /api/users", () => {
           return request(server)
             .post("/api/users/1")
             .expect(405)
@@ -152,8 +144,8 @@ describe("SERVER", () => {
       });
     });
     describe("/articles", () => {
-      describe("ERRORS", () => {
-        it("GET:404 - bad path to /api/articles", () => {
+      describe("ARTICLES ERRORS", () => {
+        it("GET:404 - throws 404 on bad path to /api/articles", () => {
           return request(server)
             .get("/api/articless")
             .expect(404)
@@ -161,7 +153,7 @@ describe("SERVER", () => {
               expect(response.body.msg).to.eql("Not found");
             });
         });
-        it("GET:404 - bad path to /api/articles/article_id", () => {
+        it("GET:404 - throws 404 on bad path to /api/articles/article_id", () => {
           return request(server)
             .get("/api/articles/0")
             .expect(404)
@@ -169,7 +161,7 @@ describe("SERVER", () => {
               expect(response.body.msg).to.eql("Not found");
             });
         });
-        it("POST:405 - bad method to /api/articles/article_id", () => {
+        it("POST:405 - throws 405 on bad method to /api/articles/article_id", () => {
           return request(server)
             .post("/api/articles/1")
             .expect(405)
@@ -177,7 +169,7 @@ describe("SERVER", () => {
               expect(response.body.msg).to.eql("Method not allowed");
             });
         });
-        it("POST:400 - invalid request body sent to /api/articles/3/comments", () => {
+        it("POST:400 - throws 400 invalid request body sent to /api/articles/3/comments", () => {
           return request(server)
             .post("/api/articles/3/comments")
             .send({ body: "lovely" })
@@ -205,7 +197,7 @@ describe("SERVER", () => {
               expect(response.body.article).to.eql(expectedResult);
             });
         });
-        it("PATCH:400 - returns 400 when sent an invalid patch request", () => {
+        it("PATCH:400 - throws 400 on invalid patch request", () => {
           return request(server)
             .patch("/api/articles/1")
             .send({ inc_votes: "hello" })
@@ -214,7 +206,7 @@ describe("SERVER", () => {
               expect(response.body.msg).to.eql("Bad request");
             });
         });
-        it("PATCH:400 - invalid request body sent to /api/articles/1", () => {
+        it("PATCH:400 - throws 400 on invalid request body sent to /api/articles/1", () => {
           return request(server)
             .patch("/api/articles/1")
             .send({ inc_votesss: -6 })
@@ -233,7 +225,7 @@ describe("SERVER", () => {
               expect(response.body.article).to.eql(expectedResult);
             });
         });
-        it("GET:404 - invalid query sent to /api/articles?author=nobody", () => {
+        it("GET:404 - throws 404 on invalid query sent to /api/articles?author=nobody", () => {
           return request(server)
             .get("/api/articles?author=nobody")
             .expect(404)
@@ -241,7 +233,7 @@ describe("SERVER", () => {
               expect(response.body.msg).to.eql("Not found");
             });
         });
-        it("GET:404 - invalid query sent to /api/articles?topic=nothing", () => {
+        it("GET:404 - throws 404 on invalid query sent to /api/articles?topic=nothing", () => {
           return request(server)
             .get("/api/articles?topic=nothing")
             .expect(404)
@@ -249,7 +241,7 @@ describe("SERVER", () => {
               expect(response.body.msg).to.eql("Not found");
             });
         });
-        it("GET:404 - invalid query sent to /api/articles?sort_by=not-a-column", () => {
+        it("GET:404 - throws 404 on invalid query sent to /api/articles?sort_by=not-a-column", () => {
           return request(server)
             .get("/api/articles?sort_by=not-a-column")
             .expect(400)
@@ -257,7 +249,7 @@ describe("SERVER", () => {
               expect(response.body.msg).to.eql("Bad request");
             });
         });
-        it("GET:404 - non-existent article ID passed to /api/articles/1000/comments", () => {
+        it("GET:404 - throws 404 on non-existent article ID passed to /api/articles/1000/comments", () => {
           return request(server)
             .get("/api/articles/1000/comments")
             .expect(404)
@@ -265,7 +257,7 @@ describe("SERVER", () => {
               expect(response.body.msg).to.eql("Not found");
             });
         });
-        it("GET:404 - invalid query sent to /api/articles?author=nobody", () => {
+        it("GET:404 - throws 404 on invalid query sent to /api/articles?author=nobody", () => {
           return request(server)
             .get("/api/articles?author=nobody")
             .expect(404)
@@ -273,7 +265,7 @@ describe("SERVER", () => {
               expect(response.body.msg).to.eql("Not found");
             });
         });
-        it("GET:400 - bad article ID passed to /api/articles/1000/comments", () => {
+        it("GET:400 - throws 400 on bad article ID passed to /api/articles/1000/comments", () => {
           return request(server)
             .get("/api/articles/not-an-article/comments")
             .expect(400)
@@ -281,7 +273,7 @@ describe("SERVER", () => {
               expect(response.body.msg).to.eql("Bad request");
             });
         });
-        it("GET:400 - bad sort_by value passed to /api/articles/1/comments", () => {
+        it("GET:400 - throws 400 on bad sort_by value passed to /api/articles/1/comments", () => {
           return request(server)
             .get("/api/articles/1/comments?sort_by=not-a-column")
             .expect(400)
@@ -289,7 +281,7 @@ describe("SERVER", () => {
               expect(response.body.msg).to.eql("Bad request");
             });
         });
-        it("throws an error when posting to valid but non-existent article ID", () => {
+        it("GET:404 throws 404 on posting to valid but non-existent article ID", () => {
           return request(server)
             .post("/api/articles/30000/comments")
             .send({ username: "rogersop", body: "lovely" })
@@ -594,8 +586,8 @@ describe("SERVER", () => {
       });
     });
     describe("/comments", () => {
-      describe("ERRORS", () => {
-        it("GET:404 - bad path to /api/comments", () => {
+      describe("COMMENTS ERRORS", () => {
+        it("GET:404 - throws 404 on bad path to /api/comments", () => {
           return request(server)
             .get("/api/cmments")
             .expect(404)
@@ -603,7 +595,7 @@ describe("SERVER", () => {
               expect(response.body.msg).to.eql("Not found");
             });
         });
-        it("POST:405 - bad method to /api/comments", () => {
+        it("POST:405 - throws 405 on bad method to /api/comments", () => {
           return request(server)
             .get("/api/comments/1")
             .expect(405)
@@ -611,30 +603,7 @@ describe("SERVER", () => {
               expect(response.body.msg).to.eql("Method not allowed");
             });
         });
-        it("PATCH:200 - returns unchanged comment when invalid request body sent to /api/comments/1", () => {
-          return request(server)
-            .patch("/api/comments/1")
-            .send({ inc_votesss: -6 })
-            .expect(200)
-            .then(response => {
-              const expectedResult = {
-                body:
-                  "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
-                article_id: 9,
-                author: "butter_bridge",
-                votes: 16
-              };
-              expect(response.body.comment.body).to.eql(expectedResult.body);
-              expect(response.body.comment.author).to.eql(
-                expectedResult.author
-              );
-              expect(response.body.comment.votes).to.eql(expectedResult.votes);
-              expect(response.body.comment.article_id).to.eql(
-                expectedResult.article_id
-              );
-            });
-        });
-        it("PATCH:400 - returns 400 when sent an invalid patch request", () => {
+        it("PATCH:400 - throws 400 when sent an invalid patch request", () => {
           return request(server)
             .patch("/api/comments/1")
             .send({ inc_votes: "hello" })
@@ -643,7 +612,7 @@ describe("SERVER", () => {
               expect(response.body.msg).to.eql("Bad request");
             });
         });
-        it("PATCH:400 - returns 400 when sent a valid patch request to an invalid comment ID", () => {
+        it("PATCH:400 - throws 400 when sent a valid patch request to an invalid comment ID", () => {
           return request(server)
             .patch("/api/comments/not-a-comment")
             .send({ inc_votes: 1 })
@@ -652,7 +621,7 @@ describe("SERVER", () => {
               expect(response.body.msg).to.eql("Bad request");
             });
         });
-        it("PATCH:404 - returns 404 when sent a patch request to a valid comment ID which doesn't exist", () => {
+        it("PATCH:404 - throws 404 when sent a patch request to a valid comment ID which doesn't exist", () => {
           return request(server)
             .patch("/api/comments/100000")
             .send({ inc_votes: 2 })
@@ -703,7 +672,7 @@ describe("SERVER", () => {
             });
         });
       });
-      describe("PATCH:200 - extra keys sent to /api/articles/3/comments", () => {
+      describe("PATCH:200 - invalid requests sent to /api/articles/3/comments", () => {
         it("ignores extra keys in request body", () => {
           return request(server)
             .patch("/api/comments/1")
@@ -726,6 +695,29 @@ describe("SERVER", () => {
                 expectedResult.article_id
               );
               expect(response.body.comment).to.not.include.keys("wrong_key");
+            });
+        });
+        it("returns unchanged comment when invalid request body sent to /api/comments/1", () => {
+          return request(server)
+            .patch("/api/comments/1")
+            .send({ inc_votesss: -6 })
+            .expect(200)
+            .then(response => {
+              const expectedResult = {
+                body:
+                  "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+                article_id: 9,
+                author: "butter_bridge",
+                votes: 16
+              };
+              expect(response.body.comment.body).to.eql(expectedResult.body);
+              expect(response.body.comment.author).to.eql(
+                expectedResult.author
+              );
+              expect(response.body.comment.votes).to.eql(expectedResult.votes);
+              expect(response.body.comment.article_id).to.eql(
+                expectedResult.article_id
+              );
             });
         });
       });
