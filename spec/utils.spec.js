@@ -2,7 +2,14 @@ process.env.NODE_ENV = "test";
 console.log(process.env.NODE_ENV);
 
 const { expect } = require("chai");
-const { formatDates, makeRefObj, formatComments } = require("../db/utils/utils");
+const {
+  formatDates,
+  makeRefObj,
+  formatComments,
+  checkArticleExists,
+  checkAuthorExists,
+  checkTopicExists
+} = require("../db/utils/utils");
 
 describe("formatDates", () => {
   it("shoudl return an empty array if passed an empty array", () => {
@@ -226,7 +233,8 @@ describe("formatComments", () => {
   it("should correctly format an array of multiple comments", () => {
     const comments = [
       {
-        body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+        body:
+          "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
         belongs_to: "They're not exactly dogs, are they?",
         author: "butter_bridge",
         votes: 16,
@@ -259,7 +267,8 @@ describe("formatComments", () => {
     const actualResult = formatComments(comments, ref);
     const expectedResult = [
       {
-        body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+        body:
+          "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
         article_id: 2,
         author: "butter_bridge",
         votes: 16,
@@ -293,3 +302,6 @@ describe("formatComments", () => {
     expect(ref).to.eql(refCopy);
   });
 });
+describe("checkAuthorExists", () => {});
+describe("checkTopicExists", () => {});
+describe("checkArticleExists", () => {});
