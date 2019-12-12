@@ -1,10 +1,12 @@
-# Project Title
+# NB News
 
-One Paragraph of project description goes here
+Welcome to NB-News, a fictional news website, built as part of a week-long coding sprint to showcase my skills as a back-end Javascript developer. Please feel free to fork, clone and play around!
+
+You can also find the online version of the app [here.](https://be-nb-news.herokuapp.com/)
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+To get your own copy of the project up-and-running, you'll need to clone the [repository](https://github.com/barnardnicholas/be-nc-news) from github. For more information on how to do this, click [here.](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository)
 
 ### Prerequisites
 
