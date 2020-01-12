@@ -1,17 +1,13 @@
 exports.badMethod = (req, res, next) => {
-  console.log("Reached badMethod error handler");
   res.status(405).send({ msg: "Method not allowed" });
 };
 exports.badRequest = (req, res, next) => {
-  console.log("Reached badRequest error handler");
   res.status(400).send({ msg: "Bad request" });
 };
 exports.routeNotFound = (req, res, next) => {
-  console.log("Reached routeNotFound error handler");
   res.status(404).send({ msg: "Not found" });
 };
 exports.handlingErrors = (err, req, res, next) => {
-  console.log("Reached handlingErrors error handler");
   const errorCodes = {
     404: "Not found",
     400: "Bad request",
@@ -22,7 +18,6 @@ exports.handlingErrors = (err, req, res, next) => {
   } else next(err);
 };
 exports.sqlErrors = (err, req, res, next) => {
-  console.log("Reached sqlErrors error handler");
   const errorCodes = {
     "42703": [400, "Bad request"],
     "23502": [400, "Bad request"],
@@ -34,7 +29,6 @@ exports.sqlErrors = (err, req, res, next) => {
   } else next(err);
 };
 exports.errorCatcher = (err, req, res, next) => {
-  console.log("Reached errorCatcher error handler");
   console.log(err);
   res.status(500).send({ msg: "Internal server error" });
 };
