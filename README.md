@@ -56,54 +56,32 @@ This will start the server listening on Port 9090. Opening a web browser and nav
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
+NC-News comes pre-laoded with a suite of tests designed to report the functionality of the system. These include tests for the various endpoints of the server, internal error handling and the various util functions used for data handling. The testing scripts are provided for you. Enter the command below to run tests on all endpoints and utils:
 
 ```
-Give an example
+npm test
 ```
 
-### And coding style tests
-
-Explain what these tests test and why
+Alternatively, you can test the util functions in isolation by entering:
 
 ```
-Give an example
+npm run test-utils
 ```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
 
 ## Built With
 
-- [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-- [Maven](https://maven.apache.org/) - Dependency Management
-- [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+- [Knex](http://knexjs.org/)
+- [Express JS](http://www.https://www.expressjs.com/)
+- [PSQL](https://www.postgresql.org/)
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
+NC News is not currently open for contributions.
 
 ## Authors
 
-- **Billie Thompson** - _Initial work_ - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+- **Nick Barnard** - [GitHub](https://github.com/barnardnicholas)
 
 ## Acknowledgments
 
-- Hat tip to anyone whose code was used
-- Inspiration
-- etc
+- Many thanks to all at Northcoders for their support and guidance with this project
