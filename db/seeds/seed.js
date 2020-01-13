@@ -1,4 +1,9 @@
-const { topicData, articleData, commentData, userData } = require("../data/index.js");
+const {
+  topicData,
+  articleData,
+  commentData,
+  userData
+} = require("../data/index.js");
 const { formatDates, formatComments, makeRefObj } = require("../utils/utils");
 
 exports.seed = function(knex) {
@@ -46,7 +51,5 @@ exports.seed = function(knex) {
         .insert(formattedComments)
         .returning("*");
     })
-    .then(() => {
-      console.log("Finished seeding!");
-    });
+    .then(() => {});
 };

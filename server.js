@@ -1,5 +1,6 @@
 const express = require("express");
 const server = express();
+const cors = require("cors");
 const mainRouter = require("./router/r-server");
 const {
   handlingErrors,
@@ -8,6 +9,7 @@ const {
 } = require("./error-handlers/error-handlers");
 
 server.use(express.json());
+server.use(cors());
 
 server.get("/", (req, res, next) => {
   res
